@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCX Design — Behavioural Science, Made Tangible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --black:      #000000;
+  --surface:    #0A0908;
+  --text:       #F2F2F2;
+  --muted:      #ADADAD;
+  --line:       rgba(140,140,140,0.18);
+  --gold-foil:  linear-gradient(115deg,
+                #6e4f17 0%, #b9892f 14%, #e8c873 28%, #fff6d8 39%,
+                #d9b24a 50%, #a3781f 66%, #7a5a1e 80%, #d6b35f 100%);
+  --gold-solid: #d4ad57;
+  --spark:      #FF4C29;
+  --header-h:   60px;
+  --maxw:       1180px;
+  --serif:      'Cormorant', Georgia, serif;
+  --sans:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100% }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } }
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none }
+::selection { background: var(--gold-solid); color: var(--black) }
+
+/* ─── UTILITIES ──────────────────────────────────────── */
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+@media (max-width: 600px) { .wrap { padding: 0 24px } }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* metallic foil */
+.foil {
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: sheen 8s linear infinite;
+}
+@keyframes sheen { to { background-position: -220% center } }
+@media (prefers-reduced-motion: reduce) {
+  .foil { animation: none; background-position: 38% center }
+}
+
+/*
+  Scroll reveal
+  iOS Safari note: IntersectionObserver can fail to fire for elements
+  already in viewport on load. The JS below handles this with a fallback
+  timeout. We also start at opacity:0 but use a CSS transition only
+  after the page has fully loaded to avoid FOUC.
+*/
+.rise {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.rise.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; transform: none; transition: none }
+}
+
+/* ─── GOLD SEAM ──────────────────────────────────────── */
+/*
+  iOS Safari cannot reliably resolve url(#id) references across
+  separate SVG elements. Gradient defs are now inlined directly
+  inside each seam SVG — the only fully compatible approach.
+*/
+.seam {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  overflow: hidden;
+}
+.seam svg { width: 100%; height: 100%; display: block }
+.seam-glint {
+  position: absolute;
+  top: 0; left: -30%;
+  width: 30%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,250,225,.5), transparent);
+  animation: glint 7s ease-in-out infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+@keyframes glint {
+  0%   { left: -30% }
+  55%  { left: 115% }
+  100% { left: 115% }
+}
+@media (prefers-reduced-motion: reduce) { .seam-glint { display: none } }
+
+/* ─── HEADER ─────────────────────────────────────────── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: rgba(0,0,0,0.94);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo { color: var(--text); flex-shrink: 0 }
+.nav-logo svg { height: 19px; display: block }
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+}
+.navlinks a {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.navlinks a:hover { color: var(--text) }
+.nav-book {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #1a1410;
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  padding: 9px 20px;
+  transition: background-position 0.5s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nav-book:hover { background-position: -110% center }
+@media (max-width: 900px) { .navlinks { display: none } }
+@media (max-width: 540px) { .nav-book { display: none } }
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero {
+  height: 100vh;
+  min-height: 680px;
+  padding-top: var(--header-h);
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  overflow: hidden;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 64px;
+  align-items: center;
+  width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.hero-left .eyebrow { margin-bottom: 36px }
+.hero-left h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(52px, 8vw, 112px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin-bottom: 44px;
+}
+.hero-left h1 em {
+  font-style: italic;
+  font-weight: 300;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.hero-right {
+  border-left: 1px solid var(--line);
+  padding-left: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+.hero-fix {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 300;
+  line-height: 1.3;
+  color: var(--text);
+}
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.hero-sub p + p { margin-top: 12px }
+
+/* HERO VIDEO BACKGROUND */
+.hero { position: relative; overflow: hidden }
+.hero-video-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+.hero-video-bg video,
+.hero-video-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-video-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.78) 0%,
+    rgba(0,0,0,0.62) 35%,
+    rgba(0,0,0,0.72) 70%,
+    rgba(0,0,0,0.88) 100%
+  );
+  z-index: 1;
+}
+.hero-inner { position: relative; z-index: 2 }
+
+.hero-seal {
+  position: absolute;
+  right: 40px;
+  bottom: 52px;
+  opacity: 0.15;
+  color: var(--muted);
+  pointer-events: none;
+  z-index: 2;
+}
+.hero-seal svg { height: 60px; display: block }
+
+@media (max-width: 900px) {
+  .hero { height: auto; min-height: 100vh; align-items: center }
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .hero-right {
+    border-left: none;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 28px;
+  }
+  .hero-left h1 { font-size: clamp(44px, 10vw, 72px); margin-bottom: 32px }
+  .hero-seal { display: none }
+}
+@media (max-width: 540px) {
+  .hero-left h1 { font-size: clamp(38px, 11vw, 56px) }
+}
+
+/* ─── CTAs ───────────────────────────────────────────── */
+.cta-primary {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #1a1410;
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  padding: 14px 28px;
+  transition: background-position 0.5s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.cta-primary:hover { background-position: -110% center }
+.cta-ghost {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: color 0.25s, border-color 0.25s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.cta-ghost:hover { color: var(--text); border-color: var(--gold-solid) }
+
+/* ─── CLIENTS ────────────────────────────────────────── */
+.clients {
+  padding: 56px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.clients .eyebrow { margin-bottom: 26px; text-align: center }
+.client-names {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 40px;
+}
+.client-names span {
+  font-family: var(--serif);
+  font-size: clamp(15px, 2vw, 21px);
+  font-weight: 300;
+  color: var(--muted);
+  transition: color 0.25s;
+  cursor: default;
+}
+.client-names span:hover { color: var(--text) }
+
+/* ─── PATTERN / CASES ────────────────────────────────── */
+.pattern { padding: 120px 0 80px }
+.pattern-lead {
+  max-width: 58ch;
+  margin-bottom: 80px;
+}
+.pattern-lead h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(24px, 3.2vw, 40px);
+  line-height: 1.2;
+  margin-top: 16px;
+}
+.cases {
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr 2px 1fr;
+  gap: 0 52px;
+  align-items: start;
+}
+.vseam-line {
+  align-self: stretch;
+  min-height: 200px;
+  background: linear-gradient(to bottom, transparent, var(--gold-solid), transparent);
+}
+.case-tag {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+.case-fracture {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+.case-metric {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1;
+}
+.case-metric-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 14px;
+  line-height: 1.6;
+}
+.method-line {
+  margin-top: 88px;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.method-line p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(20px, 2.8vw, 32px);
+  color: var(--text);
+}
+@media (max-width: 800px) {
+  .cases { grid-template-columns: 1fr; gap: 52px 0 }
+  .vseam-line {
+    height: 1px; min-height: 0;
+    background: linear-gradient(to right, transparent, var(--gold-solid), transparent);
+  }
+  .pattern { padding: 80px 0 60px }
+}
+
+/* ─── PILLARS ────────────────────────────────────────── */
+.pillars { padding: 120px 0 }
+.pillars-lead {
+  max-width: 56ch;
+  margin-bottom: 64px;
+}
+.pillars-lead h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.22;
+  margin-top: 14px;
+}
+.prow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+}
+.pillar {
+  padding: 48px 40px 52px;
+  border-right: 1px solid var(--line);
+}
+.pillar:last-child { border-right: none }
+.pillar-index {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.pillar h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.pillar-sub {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--spark);
+  margin-bottom: 20px;
+}
+.pillar-line {
+  display: block;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.38;
+  margin-bottom: 16px;
+}
+.pillar p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.74;
+  margin-bottom: 28px;
+}
+.pillar-link {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: color 0.25s, border-color 0.25s;
+}
+.pillar-link:hover { color: var(--text); border-color: var(--gold-solid) }
+@media (max-width: 860px) {
+  .prow { grid-template-columns: 1fr }
+  .pillar { border-right: none; border-bottom: 1px solid var(--line) }
+  .pillar:last-child { border-bottom: none }
+  .pillars { padding: 80px 0 }
+}
+@media (max-width: 540px) { .pillar { padding: 36px 24px 40px } }
+
+/* ─── CLOSING ────────────────────────────────────────── */
+.closing {
+  padding: 140px 0;
+  text-align: center;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.closing h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4.4vw, 56px);
+  line-height: 1.12;
+  max-width: 22ch;
+  margin: 0 auto 16px;
+}
+.closing-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 40ch;
+  margin: 0 auto 44px;
+  line-height: 1.7;
+}
+.closing-reassure {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+@media (max-width: 600px) { .closing { padding: 100px 0 } }
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer {
+  padding: 44px 0;
+  border-top: 1px solid var(--line);
+}
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.foot-left {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.foot-logo svg { height: 16px; display: block; color: var(--muted) }
+.foot-copy { font-size: 13px; color: var(--muted); letter-spacing: 0.03em }
+.foot-right { display: flex; align-items: center; gap: 28px }
+.foot-right a {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.foot-right a:hover { color: var(--text) }
+@media (max-width: 640px) {
+  .foot { flex-direction: column; align-items: flex-start }
+}
+
+</style>
+</head>
+<body>
+
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="#" class="nav-logo" aria-label="BCX Design">
+      <svg viewBox="0 0 151 61" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M10.7407 60.8267C10.8416 60.0326 10.5198 58.8638 10.9125 58.1788C11.0353 57.9642 12.6735 56.2514 13.0045 55.9058C13.5345 55.3527 14.3727 54.756 14.9291 54.193C22.3495 46.6834 29.8862 39.2721 37.2348 31.7125C41.9241 31.1085 46.5552 31.6315 50.4382 34.4785C58.7922 40.6028 58.0467 53.7291 49.0454 58.8565C47.7307 59.6051 44.6506 60.8267 43.196 60.8267H10.7407Z"/><path d="M10.7407 0.065979H43.3787C43.6924 0.065979 45.1888 0.445278 45.6116 0.560796C56.9594 3.6534 59.9886 18.3269 51.02 25.9038C47.0316 29.2729 42.1923 29.6113 37.1866 29.0019L10.9125 2.7138C10.5198 2.02978 10.8416 0.860051 10.7407 0.065979Z"/><path d="M31.2871 31.7197V34.3575L5.02306 60.6547C4.63122 60.8803 1.48197 60.9358 0.747393 60.934C0.595567 60.934 0.376465 60.8676 0.376465 60.7357V46.9099L15.559 31.7197H31.2871Z"/><path d="M4.64941 0.065979L30.3143 25.5982C31.5026 26.8825 31.3589 27.4128 31.2871 29.1729H15.559L0.376465 13.9827V0.065979H4.64941Z"/><path d="M120.502 40.3466L131.551 25.0735L120.726 10.1362H128.67L135.467 19.7867L142.153 10.1362H150.097L139.272 25.0735L150.377 40.3466H142.432L135.467 30.3604L128.446 40.3466H120.502Z"/><path d="M108.155 41.1857C105.041 41.1857 102.383 40.4958 100.183 39.1158C97.9822 37.7171 96.2945 35.815 95.1197 33.4094C93.9635 31.0037 93.3761 28.2811 93.3574 25.2414C93.3761 22.1457 93.9821 19.4044 95.1756 17.0174C96.3878 14.6118 98.1034 12.7283 100.323 11.367C102.542 9.98699 105.181 9.297 108.239 9.297C111.67 9.297 114.57 10.1641 116.938 11.8984C119.325 13.6141 120.882 15.9638 121.61 18.9475L114.896 20.7658C114.374 19.1433 113.507 17.8846 112.295 16.9895C111.083 16.0757 109.703 15.6188 108.155 15.6188C106.402 15.6188 104.957 16.0384 103.819 16.8776C102.682 17.6981 101.842 18.8356 101.302 20.2902C100.761 21.7448 100.49 23.3952 100.49 25.2414C100.49 28.1132 101.134 30.4349 102.421 32.2065C103.707 33.9781 105.619 34.8639 108.155 34.8639C109.945 34.8639 111.353 34.4537 112.379 33.6331C113.423 32.8126 114.206 31.6284 114.728 30.0806L121.61 31.6191C120.677 34.6961 119.046 37.0644 116.715 38.7242C114.383 40.3652 111.53 41.1857 108.155 41.1857Z"/><path d="M78.4365 41.1857C75.4901 41.1857 73.0192 40.4864 71.0238 39.0877C69.0284 37.6891 67.5272 35.787 66.5202 33.3813C65.5132 30.957 65.0097 28.2437 65.0097 25.2413C65.0097 22.2016 65.5132 19.479 66.5202 17.0733C67.5272 14.6677 69.0004 12.7749 70.9399 11.3949C72.8979 9.99625 75.3129 9.29693 78.1848 9.29693C81.038 9.29693 83.5089 9.99625 85.5975 11.3949C87.7048 12.7749 89.3365 14.6677 90.4927 17.0733C91.6489 19.4603 92.227 22.183 92.227 25.2413C92.227 28.2623 91.6582 30.9757 90.5207 33.3813C89.3831 35.787 87.7794 37.6891 85.7094 39.0877C83.6394 40.4864 81.2151 41.1857 78.4365 41.1857ZM63.8628 40.3465V0.065979H70.6601V19.1433H69.821V40.3465H63.8628ZM77.4015 35.1436C79.1545 35.1436 80.5997 34.7054 81.7373 33.8289C82.8748 32.9524 83.714 31.7682 84.2548 30.2764C84.8143 28.7659 85.094 27.0875 85.094 25.2413C85.094 23.4138 84.8143 21.7541 84.2548 20.2622C83.6954 18.7517 82.8282 17.5582 81.6534 16.6817C80.4785 15.7866 78.9866 15.339 77.1777 15.339C75.4621 15.339 74.0635 15.7586 72.9819 16.5978C71.9002 17.4183 71.0984 18.5745 70.5762 20.0664C70.0727 21.5396 69.821 23.2646 69.821 25.2413C69.821 27.1994 70.0727 28.9244 70.5762 30.4162C71.0984 31.9081 71.9096 33.0736 73.0098 33.9128C74.1287 34.7333 75.5926 35.1436 77.4015 35.1436Z"/><path d="M136.272 60.2052V45.1H139.167L145.734 55.1702V45.1H148.629V60.2052H145.734L139.167 50.1351V60.2052H136.272Z"/><path d="M125.127 60.5199C124.176 60.5199 123.271 60.3521 122.411 60.0164C121.55 59.6737 120.788 59.1702 120.124 58.5059C119.466 57.8415 118.945 57.0198 118.561 56.0408C118.183 55.0618 117.994 53.9324 117.994 52.6526C117.994 50.9813 118.313 49.5617 118.949 48.3938C119.592 47.219 120.452 46.3238 121.529 45.7084C122.613 45.093 123.813 44.7853 125.127 44.7853C127.071 44.7853 128.599 45.2364 129.711 46.1385C130.823 47.0406 131.568 48.3169 131.946 49.9673L129.03 50.3868C128.757 49.5057 128.309 48.8029 127.687 48.2784C127.071 47.7469 126.281 47.4777 125.316 47.4707C124.358 47.4567 123.561 47.663 122.925 48.0896C122.288 48.5162 121.809 49.1211 121.487 49.9043C121.173 50.6876 121.015 51.6037 121.015 52.6526C121.015 53.7016 121.173 54.6107 121.487 55.38C121.809 56.1492 122.288 56.7471 122.925 57.1737C123.561 57.6003 124.358 57.8206 125.316 57.8345C125.967 57.8485 126.554 57.7366 127.078 57.4989C127.61 57.2611 128.058 56.887 128.421 56.3765C128.785 55.866 129.044 55.2121 129.197 54.4149H126.806V52.2121H132.239C132.253 52.303 132.264 52.4638 132.271 52.6946C132.278 52.9254 132.281 53.0582 132.281 53.0932C132.281 54.5408 131.988 55.824 131.4 56.9429C130.813 58.0618 129.984 58.9395 128.914 59.5758C127.844 60.2052 126.582 60.5199 125.127 60.5199Z"/><path d="M110.948 60.2052V45.1H113.801V60.2052H110.948Z"/><path d="M100.481 60.5199C99.3619 60.5199 98.3514 60.3241 97.4493 59.9325C96.5542 59.5339 95.8164 58.9674 95.2359 58.2332C94.6625 57.4919 94.2989 56.6107 94.145 55.5897L97.1241 55.1492C97.3339 56.0163 97.7675 56.6842 98.4248 57.1527C99.0822 57.6213 99.8304 57.8555 100.67 57.8555C101.138 57.8555 101.593 57.7821 102.033 57.6352C102.474 57.4884 102.834 57.2716 103.114 56.9849C103.4 56.6982 103.544 56.345 103.544 55.9254C103.544 55.7716 103.519 55.6247 103.47 55.4848C103.428 55.338 103.355 55.2016 103.25 55.0757C103.145 54.9499 102.995 54.831 102.799 54.7191C102.61 54.6072 102.369 54.5058 102.075 54.4149L98.1521 53.261C97.8584 53.1771 97.5157 53.0582 97.1241 52.9044C96.7395 52.7505 96.3653 52.5302 96.0017 52.2435C95.6381 51.9568 95.3339 51.5792 95.0891 51.1106C94.8513 50.6351 94.7324 50.0372 94.7324 49.3169C94.7324 48.3029 94.9877 47.4602 95.4982 46.7889C96.0087 46.1175 96.6905 45.6175 97.5437 45.2888C98.3969 44.9602 99.3409 44.7993 100.376 44.8063C101.418 44.8203 102.348 44.9986 103.166 45.3413C103.984 45.6839 104.67 46.184 105.222 46.8413C105.775 47.4917 106.173 48.2889 106.418 49.233L103.334 49.7575C103.222 49.2679 103.016 48.8553 102.715 48.5197C102.414 48.184 102.054 47.9287 101.635 47.7539C101.222 47.5791 100.789 47.4847 100.334 47.4707C99.8864 47.4567 99.4633 47.5197 99.0647 47.6595C98.6731 47.7924 98.3514 47.9882 98.0996 48.2469C97.8549 48.5057 97.7325 48.8134 97.7325 49.17C97.7325 49.4987 97.8339 49.7679 98.0367 49.9777C98.2395 50.1805 98.4948 50.3449 98.8025 50.4708C99.1102 50.5966 99.4248 50.7015 99.7465 50.7854L102.369 51.4987C102.761 51.6036 103.194 51.7435 103.67 51.9183C104.145 52.0862 104.6 52.3239 105.033 52.6316C105.474 52.9323 105.834 53.331 106.114 53.8275C106.401 54.324 106.544 54.9534 106.544 55.7156C106.544 56.5268 106.373 57.2366 106.03 57.845C105.694 58.4464 105.24 58.9465 104.666 59.3451C104.093 59.7367 103.442 60.0304 102.715 60.2262C101.995 60.422 101.25 60.5199 100.481 60.5199Z"/><path d="M80.5117 60.2052V45.1H90.3721V47.7644H83.3649V50.9953H89.1133V53.6596H83.3649V57.5408H90.3721V60.2052H80.5117Z"/><path d="M63.729 60.2052V45.1H68.6172C68.7361 45.1 68.9809 45.1035 69.3515 45.1105C69.7221 45.1175 70.0788 45.142 70.4214 45.184C71.6383 45.3308 72.6697 45.7539 73.5159 46.4532C74.3621 47.1525 75.0055 48.0407 75.446 49.1176C75.8866 50.1945 76.1069 51.3729 76.1069 52.6526C76.1069 53.9324 75.8866 55.1107 75.446 56.1877C75.0055 57.2646 74.3621 58.1527 73.5159 58.8521C72.6697 59.5514 71.6383 59.9745 70.4214 60.1213C70.0788 60.1633 69.7221 60.1877 69.3515 60.1947C68.9809 60.2017 68.7361 60.2052 68.6172 60.2052H63.729ZM66.6242 57.5199H68.6172C68.806 57.5199 69.0613 57.5164 69.383 57.5094C69.7046 57.4954 69.9949 57.4639 70.2536 57.415C70.911 57.2821 71.4459 56.9744 71.8585 56.4919C72.2781 56.0093 72.5858 55.4289 72.7816 54.7506C72.9844 54.0722 73.0858 53.3729 73.0858 52.6526C73.0858 51.8974 72.9809 51.1806 72.7711 50.5022C72.5683 49.8239 72.2571 49.2505 71.8376 48.7819C71.418 48.3134 70.89 48.0162 70.2536 47.8903C69.9949 47.8344 69.7046 47.8029 69.383 47.7959C69.0613 47.7889 68.806 47.7854 68.6172 47.7854H66.6242V57.5199Z"/></g></svg>
+    </a>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a href="#intelligence">Intelligence</a>
+      <a href="#strategy">Strategy</a>
+      <a href="#studio">Studio</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+    </nav>
+    <a href="#book" class="nav-book">Book a Call</a>
+  </div>
+</header>
+
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-video-bg" aria-hidden="true">
+    <img src="images/homepage-hero-bowl.jpg" alt="">
+  </div>
+  <div class="hero-video-overlay" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+
+    <div class="hero-left">
+      <p class="eyebrow rise">Behavioural science · strategy · design</p>
+      <h1 class="rise">
+        Your plan<br>
+        said one thing.<br>
+        Your results<br>
+        say <em class="foil">another.</em>
+      </h1>
+      <div class="hero-actions rise">
+        <a href="#book" class="cta-primary">Book a Call</a>
+        <a href="#work" class="cta-ghost">See our work</a>
+      </div>
+    </div>
+
+    <div class="hero-right rise">
+      <p class="hero-fix">We find the human reason — and fix it.</p>
+      <div class="hero-sub">
+        <p>Most business problems that look like strategy problems, technology problems, or market problems are actually behaviour problems. People not doing what the plan assumed they would.</p>
+        <p>BCX Design finds exactly where that gap sits and builds or redesigns the intervention that closes it. Not a report. Not a recommendation. The actual fix.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-seal" aria-hidden="true">
+    <svg viewBox="0 0 61 61" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor"><path d="M10.7407 60.8267C10.8416 60.0326 10.5198 58.8638 10.9125 58.1788C11.0353 57.9642 12.6735 56.2514 13.0045 55.9058C13.5345 55.3527 14.3727 54.756 14.9291 54.193C22.3495 46.6834 29.8862 39.2721 37.2348 31.7125C41.9241 31.1085 46.5552 31.6315 50.4382 34.4785C58.7922 40.6028 58.0467 53.7291 49.0454 58.8565C47.7308 59.6051 44.6506 60.8267 43.196 60.8267H10.7407Z"/><path d="M10.7407 0.065979H43.3787C43.6924 0.065979 45.1888 0.445278 45.6115 0.560796C56.9594 3.6534 59.9886 18.3269 51.02 25.9038C47.0316 29.2729 42.1923 29.6113 37.1866 29.0019L10.9125 2.7138C10.5198 2.02978 10.8416 0.860051 10.7407 0.065979Z"/><path d="M31.2871 31.7197V34.3575L5.02306 60.6547C4.63122 60.8803 1.48197 60.9358 0.747393 60.934C0.595567 60.934 0.376465 60.8676 0.376465 60.7357V46.9099L15.559 31.7197H31.2871Z"/><path d="M4.64941 0.065979L30.3143 25.5982C31.5026 26.8825 31.3589 27.4128 31.2871 29.1729H15.559L0.376465 13.9827V0.065979H4.64941Z"/></g></svg>
+  </div>
+</section>
+
+
+<!-- CLIENTS -->
+<section class="clients">
+  <div class="wrap">
+    <p class="eyebrow rise">Trusted by</p>
+    <div class="client-names rise">
+      <span>HSBC</span><span>DBS</span><span>Scotiabank</span><span>Samsung</span>
+      <span>Amnesty International</span><span>FAO</span><span>Pandora</span>
+      <span>SCB</span><span>Chevron</span><span>Varthana</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- SEAM — gradient inlined for iOS Safari compatibility -->
+<div class="seam" aria-hidden="true">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0"    stop-color="#6e4f17"/>
+        <stop offset="0.18" stop-color="#cda14d"/>
+        <stop offset="0.36" stop-color="#f6e6ad"/>
+        <stop offset="0.45" stop-color="#fffbe6"/>
+        <stop offset="0.56" stop-color="#ddb74f"/>
+        <stop offset="0.76" stop-color="#9c7328"/>
+        <stop offset="1"    stop-color="#e2bf66"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 12 L150 10 L210 15 L300 8 L360 13 L470 9 L540 16 L640 11 L700 6 L820 14 L900 9 L980 15 L1080 10 L1140 14 L1200 11"
+      fill="none" stroke="url(#g1)" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M360 13 L388 5 M640 11 L662 20 M900 9 L924 3"
+      fill="none" stroke="url(#g1)" stroke-width="0.8" opacity="0.7"/>
+  </svg>
+  <span class="seam-glint" aria-hidden="true"></span>
+</div>
+
+
+<!-- PATTERN / CASES -->
+<section class="pattern" id="work">
+  <div class="wrap">
+
+    <div class="pattern-lead rise">
+      <p class="eyebrow">Where the work begins</p>
+      <h2>You already know something is not performing the way it should. The harder question is exactly what is driving it — and what closing that gap would mean to your numbers.</h2>
+    </div>
+
+    <div class="cases rise">
+
+      <div class="case-col">
+        <span class="case-tag">UN Agency · Intelligence</span>
+        <p class="case-fracture">A mandate to become less bureaucratic. The real problem was not culture. It was buried in the design of the systems people were being asked to use.</p>
+        <span class="case-metric foil">70%</span>
+        <p class="case-metric-label">Reduction in process time.<br>Weeks became days.</p>
+      </div>
+
+      <div class="vseam-line" aria-hidden="true"></div>
+
+      <div class="case-col">
+        <span class="case-tag">Technology Company · Strategy</span>
+        <p class="case-fracture">An 18-month sales cycle. The problem was not the sales team. The right information was not reaching the right people at the right moment.</p>
+        <span class="case-metric foil">7 mo</span>
+        <p class="case-metric-label">Average deal cycle, down from 18.<br>$640,000 freed across the pipeline.</p>
+      </div>
+
+      <div class="vseam-line" aria-hidden="true"></div>
+
+      <div class="case-col">
+        <span class="case-tag">Consumer Marketplace · Studio</span>
+        <p class="case-fracture">A platform built for growth that was not growing. We built the product and the campaign around how their customers actually shop.</p>
+        <span class="case-metric foil">300%</span>
+        <p class="case-metric-label">Increase in purchases.<br>Average order value up 200%. In three months.</p>
+      </div>
+
+    </div>
+
+    <div class="method-line rise">
+      <p>We find the problem behind the problem.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SEAM reversed — gradient inlined -->
+<div class="seam" aria-hidden="true" style="transform:scaleX(-1)">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0"    stop-color="#6e4f17"/>
+        <stop offset="0.18" stop-color="#cda14d"/>
+        <stop offset="0.36" stop-color="#f6e6ad"/>
+        <stop offset="0.45" stop-color="#fffbe6"/>
+        <stop offset="0.56" stop-color="#ddb74f"/>
+        <stop offset="0.76" stop-color="#9c7328"/>
+        <stop offset="1"    stop-color="#e2bf66"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 12 L150 10 L210 15 L300 8 L360 13 L470 9 L540 16 L640 11 L700 6 L820 14 L900 9 L980 15 L1080 10 L1140 14 L1200 11"
+      fill="none" stroke="url(#g2)" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+
+<!-- PILLARS -->
+<section class="pillars">
+  <div class="wrap">
+
+    <div class="pillars-lead rise">
+      <p class="eyebrow">Three pillars, one method</p>
+      <h2>See what is broken. Design the repair. Build the fix. Each pillar is a stage, not a separate service.</h2>
+    </div>
+
+    <div class="prow">
+
+      <div class="pillar rise" id="intelligence">
+        <span class="pillar-index" style="color:var(--spark)">01 — Intelligence</span>
+        <h3>BCX Intelligence</h3>
+        <span class="pillar-sub">Powered by Kindling</span>
+        <span class="pillar-line">Before you fix anything, you need to know what is actually broken.</span>
+        <p>BCX Design runs behavioural diagnostics across customer journeys, employee workflows, and organisational systems that surface the real friction points your data is not showing you. The output is a prioritised decision: here is what to fix first, and here is why.</p>
+        <a href="#" class="pillar-link">Learn more</a>
+      </div>
+
+      <div class="pillar rise" id="strategy">
+        <span class="pillar-index foil">02 — Strategy</span>
+        <h3>BCX Strategy</h3>
+        <span class="pillar-line">The right diagnosis is worth nothing without the right plan.</span>
+        <p>BCX Design translates behavioural findings into intervention design. Change playbooks, go-to-market strategy, sales transformation, AI strategy, and innovation programme architecture. Tested before it is recommended for scale, with the governance to make it stick.</p>
+        <a href="#" class="pillar-link">Learn more</a>
+      </div>
+
+      <div class="pillar rise" id="studio">
+        <span class="pillar-index foil">03 — Studio</span>
+        <h3>BCX Studio</h3>
+        <span class="pillar-line">Strategy without execution is just an opinion.</span>
+        <p>BCX Design builds and redesigns what the problem requires. Digital products, campaigns, service experiences, and capability programmes designed around how people actually behave, not how we wish they would.</p>
+        <a href="#" class="pillar-link">Learn more</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- SEAM — gradient inlined -->
+<div class="seam" aria-hidden="true">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g3" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0"    stop-color="#6e4f17"/>
+        <stop offset="0.18" stop-color="#cda14d"/>
+        <stop offset="0.36" stop-color="#f6e6ad"/>
+        <stop offset="0.45" stop-color="#fffbe6"/>
+        <stop offset="0.56" stop-color="#ddb74f"/>
+        <stop offset="0.76" stop-color="#9c7328"/>
+        <stop offset="1"    stop-color="#e2bf66"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 12 L150 10 L210 15 L300 8 L360 13 L470 9 L540 16 L640 11 L700 6 L820 14 L900 9 L980 15 L1080 10 L1140 14 L1200 11"
+      fill="none" stroke="url(#g3)" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M360 13 L388 5 M640 11 L662 20 M900 9 L924 3"
+      fill="none" stroke="url(#g3)" stroke-width="0.8" opacity="0.7"/>
+  </svg>
+  <span class="seam-glint" aria-hidden="true"></span>
+</div>
+
+
+<!-- CLOSING CTA -->
+<section class="closing" id="book">
+  <div class="wrap">
+    <h2 class="rise">If something is not working the way it should, the answer is usually <em class="foil">closer than you think.</em></h2>
+    <p class="closing-sub rise">It starts with understanding exactly what is broken and why.</p>
+    <a href="#" class="cta-primary rise">Book a Call</a>
+    <p class="closing-reassure rise">A first conversation costs nothing and commits you to nothing.<br>We will tell you honestly whether we can help.</p>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer id="about">
+  <div class="wrap foot">
+    <div class="foot-left">
+      <a href="#" class="foot-logo" aria-label="BCX Design">
+        <svg viewBox="0 0 151 61" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M10.7407 60.8267C10.8416 60.0326 10.5198 58.8638 10.9125 58.1788C11.0353 57.9642 12.6735 56.2514 13.0045 55.9058C13.5345 55.3527 14.3727 54.756 14.9291 54.193C22.3495 46.6834 29.8862 39.2721 37.2348 31.7125C41.9241 31.1085 46.5552 31.6315 50.4382 34.4785C58.7922 40.6028 58.0467 53.7291 49.0454 58.8565C47.7307 59.6051 44.6506 60.8267 43.196 60.8267H10.7407Z"/><path d="M10.7407 0.065979H43.3787C43.6924 0.065979 45.1888 0.445278 45.6116 0.560796C56.9594 3.6534 59.9886 18.3269 51.02 25.9038C47.0316 29.2729 42.1923 29.6113 37.1866 29.0019L10.9125 2.7138C10.5198 2.02978 10.8416 0.860051 10.7407 0.065979Z"/><path d="M31.2871 31.7197V34.3575L5.02306 60.6547C4.63122 60.8803 1.48197 60.9358 0.747393 60.934C0.595567 60.934 0.376465 60.8676 0.376465 60.7357V46.9099L15.559 31.7197H31.2871Z"/><path d="M4.64941 0.065979L30.3143 25.5982C31.5026 26.8825 31.3589 27.4128 31.2871 29.1729H15.559L0.376465 13.9827V0.065979H4.64941Z"/><path d="M120.502 40.3466L131.551 25.0735L120.726 10.1362H128.67L135.467 19.7867L142.153 10.1362H150.097L139.272 25.0735L150.377 40.3466H142.432L135.467 30.3604L128.446 40.3466H120.502Z"/><path d="M108.155 41.1857C105.041 41.1857 102.383 40.4958 100.183 39.1158C97.9822 37.7171 96.2945 35.815 95.1197 33.4094C93.9635 31.0037 93.3761 28.2811 93.3574 25.2414C93.3761 22.1457 93.9821 19.4044 95.1756 17.0174C96.3878 14.6118 98.1034 12.7283 100.323 11.367C102.542 9.98699 105.181 9.297 108.239 9.297C111.67 9.297 114.57 10.1641 116.938 11.8984C119.325 13.6141 120.882 15.9638 121.61 18.9475L114.896 20.7658C114.374 19.1433 113.507 17.8846 112.295 16.9895C111.083 16.0757 109.703 15.6188 108.155 15.6188C106.402 15.6188 104.957 16.0384 103.819 16.8776C102.682 17.6981 101.842 18.8356 101.302 20.2902C100.761 21.7448 100.49 23.3952 100.49 25.2414C100.49 28.1132 101.134 30.4349 102.421 32.2065C103.707 33.9781 105.619 34.8639 108.155 34.8639C109.945 34.8639 111.353 34.4537 112.379 33.6331C113.423 32.8126 114.206 31.6284 114.728 30.0806L121.61 31.6191C120.677 34.6961 119.046 37.0644 116.715 38.7242C114.383 40.3652 111.53 41.1857 108.155 41.1857Z"/><path d="M78.4365 41.1857C75.4901 41.1857 73.0192 40.4864 71.0238 39.0877C69.0284 37.6891 67.5272 35.787 66.5202 33.3813C65.5132 30.957 65.0097 28.2437 65.0097 25.2413C65.0097 22.2016 65.5132 19.479 66.5202 17.0733C67.5272 14.6677 69.0004 12.7749 70.9399 11.3949C72.8979 9.99625 75.3129 9.29693 78.1848 9.29693C81.038 9.29693 83.5089 9.99625 85.5975 11.3949C87.7048 12.7749 89.3365 14.6677 90.4927 17.0733C91.6489 19.4603 92.227 22.183 92.227 25.2413C92.227 28.2623 91.6582 30.9757 90.5207 33.3813C89.3831 35.787 87.7794 37.6891 85.7094 39.0877C83.6394 40.4864 81.2151 41.1857 78.4365 41.1857ZM63.8628 40.3465V0.065979H70.6601V19.1433H69.821V40.3465H63.8628ZM77.4015 35.1436C79.1545 35.1436 80.5997 34.7054 81.7373 33.8289C82.8748 32.9524 83.714 31.7682 84.2548 30.2764C84.8143 28.7659 85.094 27.0875 85.094 25.2413C85.094 23.4138 84.8143 21.7541 84.2548 20.2622C83.6954 18.7517 82.8282 17.5582 81.6534 16.6817C80.4785 15.7866 78.9866 15.339 77.1777 15.339C75.4621 15.339 74.0635 15.7586 72.9819 16.5978C71.9002 17.4183 71.0984 18.5745 70.5762 20.0664C70.0727 21.5396 69.821 23.2646 69.821 25.2413C69.821 27.1994 70.0727 28.9244 70.5762 30.4162C71.0984 31.9081 71.9096 33.0736 73.0098 33.9128C74.1287 34.7333 75.5926 35.1436 77.4015 35.1436Z"/><path d="M136.272 60.2052V45.1H139.167L145.734 55.1702V45.1H148.629V60.2052H145.734L139.167 50.1351V60.2052H136.272Z"/><path d="M125.127 60.5199C124.176 60.5199 123.271 60.3521 122.411 60.0164C121.55 59.6737 120.788 59.1702 120.124 58.5059C119.466 57.8415 118.945 57.0198 118.561 56.0408C118.183 55.0618 117.994 53.9324 117.994 52.6526C117.994 50.9813 118.313 49.5617 118.949 48.3938C119.592 47.219 120.452 46.3238 121.529 45.7084C122.613 45.093 123.813 44.7853 125.127 44.7853C127.071 44.7853 128.599 45.2364 129.711 46.1385C130.823 47.0406 131.568 48.3169 131.946 49.9673L129.03 50.3868C128.757 49.5057 128.309 48.8029 127.687 48.2784C127.071 47.7469 126.281 47.4777 125.316 47.4707C124.358 47.4567 123.561 47.663 122.925 48.0896C122.288 48.5162 121.809 49.1211 121.487 49.9043C121.173 50.6876 121.015 51.6037 121.015 52.6526C121.015 53.7016 121.173 54.6107 121.487 55.38C121.809 56.1492 122.288 56.7471 122.925 57.1737C123.561 57.6003 124.358 57.8206 125.316 57.8345C125.967 57.8485 126.554 57.7366 127.078 57.4989C127.61 57.2611 128.058 56.887 128.421 56.3765C128.785 55.866 129.044 55.2121 129.197 54.4149H126.806V52.2121H132.239C132.253 52.303 132.264 52.4638 132.271 52.6946C132.278 52.9254 132.281 53.0582 132.281 53.0932C132.281 54.5408 131.988 55.824 131.4 56.9429C130.813 58.0618 129.984 58.9395 128.914 59.5758C127.844 60.2052 126.582 60.5199 125.127 60.5199Z"/><path d="M110.948 60.2052V45.1H113.801V60.2052H110.948Z"/><path d="M100.481 60.5199C99.3619 60.5199 98.3514 60.3241 97.4493 59.9325C96.5542 59.5339 95.8164 58.9674 95.2359 58.2332C94.6625 57.4919 94.2989 56.6107 94.145 55.5897L97.1241 55.1492C97.3339 56.0163 97.7675 56.6842 98.4248 57.1527C99.0822 57.6213 99.8304 57.8555 100.67 57.8555C101.138 57.8555 101.593 57.7821 102.033 57.6352C102.474 57.4884 102.834 57.2716 103.114 56.9849C103.4 56.6982 103.544 56.345 103.544 55.9254C103.544 55.7716 103.519 55.6247 103.47 55.4848C103.428 55.338 103.355 55.2016 103.25 55.0757C103.145 54.9499 102.995 54.831 102.799 54.7191C102.61 54.6072 102.369 54.5058 102.075 54.4149L98.1521 53.261C97.8584 53.1771 97.5157 53.0582 97.1241 52.9044C96.7395 52.7505 96.3653 52.5302 96.0017 52.2435C95.6381 51.9568 95.3339 51.5792 95.0891 51.1106C94.8513 50.6351 94.7324 50.0372 94.7324 49.3169C94.7324 48.3029 94.9877 47.4602 95.4982 46.7889C96.0087 46.1175 96.6905 45.6175 97.5437 45.2888C98.3969 44.9602 99.3409 44.7993 100.376 44.8063C101.418 44.8203 102.348 44.9986 103.166 45.3413C103.984 45.6839 104.67 46.184 105.222 46.8413C105.775 47.4917 106.173 48.2889 106.418 49.233L103.334 49.7575C103.222 49.2679 103.016 48.8553 102.715 48.5197C102.414 48.184 102.054 47.9287 101.635 47.7539C101.222 47.5791 100.789 47.4847 100.334 47.4707C99.8864 47.4567 99.4633 47.5197 99.0647 47.6595C98.6731 47.7924 98.3514 47.9882 98.0996 48.2469C97.8549 48.5057 97.7325 48.8134 97.7325 49.17C97.7325 49.4987 97.8339 49.7679 98.0367 49.9777C98.2395 50.1805 98.4948 50.3449 98.8025 50.4708C99.1102 50.5966 99.4248 50.7015 99.7465 50.7854L102.369 51.4987C102.761 51.6036 103.194 51.7435 103.67 51.9183C104.145 52.0862 104.6 52.3239 105.033 52.6316C105.474 52.9323 105.834 53.331 106.114 53.8275C106.401 54.324 106.544 54.9534 106.544 55.7156C106.544 56.5268 106.373 57.2366 106.03 57.845C105.694 58.4464 105.24 58.9465 104.666 59.3451C104.093 59.7367 103.442 60.0304 102.715 60.2262C101.995 60.422 101.25 60.5199 100.481 60.5199Z"/><path d="M80.5117 60.2052V45.1H90.3721V47.7644H83.3649V50.9953H89.1133V53.6596H83.3649V57.5408H90.3721V60.2052H80.5117Z"/><path d="M63.729 60.2052V45.1H68.6172C68.7361 45.1 68.9809 45.1035 69.3515 45.1105C69.7221 45.1175 70.0788 45.142 70.4214 45.184C71.6383 45.3308 72.6697 45.7539 73.5159 46.4532C74.3621 47.1525 75.0055 48.0407 75.446 49.1176C75.8866 50.1945 76.1069 51.3729 76.1069 52.6526C76.1069 53.9324 75.8866 55.1107 75.446 56.1877C75.0055 57.2646 74.3621 58.1527 73.5159 58.8521C72.6697 59.5514 71.6383 59.9745 70.4214 60.1213C70.0788 60.1633 69.7221 60.1877 69.3515 60.1947C68.9809 60.2017 68.7361 60.2052 68.6172 60.2052H63.729ZM66.6242 57.5199H68.6172C68.806 57.5199 69.0613 57.5164 69.383 57.5094C69.7046 57.4954 69.9949 57.4639 70.2536 57.415C70.911 57.2821 71.4459 56.9744 71.8585 56.4919C72.2781 56.0093 72.5858 55.4289 72.7816 54.7506C72.9844 54.0722 73.0858 53.3729 73.0858 52.6526C73.0858 51.8974 72.9809 51.1806 72.7711 50.5022C72.5683 49.8239 72.2571 49.2505 71.8376 48.7819C71.418 48.3134 70.89 48.0162 70.2536 47.8903C69.9949 47.8344 69.7046 47.8029 69.383 47.7959C69.0613 47.7889 68.806 47.7854 68.6172 47.7854H66.6242V57.5199Z"/></g></svg>
+      </a>
+      <span class="foot-copy">© 2026 BCX Design Pte Ltd · Behavioural science, made tangible</span>
+    </div>
+    <div class="foot-right">
+      <a href="#">Singapore · Bangkok</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/*
+  Scroll reveal with iOS Safari fallback.
+
+  iOS Safari has two known issues with IntersectionObserver:
+  1. Elements already in the viewport on load may never fire the callback.
+  2. The observer can be unreliable after a page has been backgrounded and restored.
+
+  Fix: observe all elements normally, but after 600ms force-reveal anything
+  still hidden. This covers the iOS edge case without affecting other browsers.
+*/
+(function () {
+  var rises = document.querySelectorAll('.rise');
+
+  if (!('IntersectionObserver' in window)) {
+    rises.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
+
+  rises.forEach(function (el) { io.observe(el); });
+
+  /* Belt-and-braces fallback for iOS */
+  setTimeout(function () {
+    document.querySelectorAll('.rise:not(.in)').forEach(function (el) {
+      el.classList.add('in');
+    });
+  }, 600);
+}());
+</script>
+
+</body>
+</html>

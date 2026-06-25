@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCX Design — Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --black:      #000000;
+  --surface:    #0A0908;
+  --text:       #F2F2F2;
+  --muted:      #ADADAD;
+  --line:       rgba(140,140,140,0.18);
+  --gold-foil:  linear-gradient(115deg,
+                #6e4f17 0%, #b9892f 14%, #e8c873 28%, #fff6d8 39%,
+                #d9b24a 50%, #a3781f 66%, #7a5a1e 80%, #d6b35f 100%);
+  --gold-solid: #d4ad57;
+  --spark:      #FF4C29;
+  --header-h:   60px;
+  --maxw:       1180px;
+  --serif:      'Cormorant', Georgia, serif;
+  --sans:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100% }
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none }
+::selection { background: var(--gold-solid); color: var(--black) }
+
+/* ─── UTILITIES ──────────────────────────────────────── */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 40px }
+@media (max-width: 600px) { .wrap { padding: 0 24px } }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.foil {
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: sheen 8s linear infinite;
+}
+@keyframes sheen { to { background-position: -220% center } }
+@media (prefers-reduced-motion: reduce) {
+  .foil { animation: none; background-position: 38% center }
+}
+
+.rise {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.rise.in { opacity: 1; transform: none }
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; transform: none; transition: none }
+}
+
+/* ─── SEAM ───────────────────────────────────────────── */
+.seam {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  overflow: hidden;
+}
+.seam svg { width: 100%; height: 100%; display: block }
+.seam-glint {
+  position: absolute;
+  top: 0; left: -30%;
+  width: 30%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,250,225,.5), transparent);
+  animation: glint 7s ease-in-out infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+@keyframes glint { 0% { left:-30% } 55% { left:115% } 100% { left:115% } }
+@media (prefers-reduced-motion: reduce) { .seam-glint { display: none } }
+
+/* ─── HEADER ─────────────────────────────────────────── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: rgba(0,0,0,0.94);
+  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo { color: var(--text); flex-shrink: 0 }
+.nav-logo svg { height: 19px; display: block }
+.navlinks { display: flex; align-items: center; gap: 34px }
+.navlinks a {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.navlinks a:hover { color: var(--text) }
+.navlinks a.active { color: var(--text) }
+.nav-book {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #1a1410;
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  padding: 9px 20px;
+  transition: background-position 0.5s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nav-book:hover { background-position: -110% center }
+@media (max-width: 900px) { .navlinks { display: none } }
+@media (max-width: 540px) { .nav-book { display: none } }
+
+/* ─── PAGE HERO ──────────────────────────────────────── */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: calc(var(--header-h) + 100px);
+  padding-bottom: 80px;
+  border-bottom: 1px solid var(--line);
+}
+.page-hero-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+.page-hero-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.page-hero-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.82) 0%,
+    rgba(0,0,0,0.68) 40%,
+    rgba(0,0,0,0.78) 75%,
+    rgba(0,0,0,0.92) 100%
+  );
+  z-index: 1;
+}
+.page-hero .wrap { position: relative; z-index: 2 }
+.breadcrumb {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.breadcrumb span { opacity: 0.4 }
+.page-hero h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 72px);
+  line-height: 1.06;
+  max-width: 22ch;
+  margin-bottom: 24px;
+}
+.page-hero h1 em { font-style: italic }
+.page-hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 56ch;
+  line-height: 1.8;
+}
+
+/* ─── CAROUSEL ───────────────────────────────────────── */
+.cases-section { padding: 80px 0 60px }
+
+.carousel-viewport {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  align-items: stretch;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* each card: 50% on desktop, 100% on mobile */
+.case {
+  flex: 0 0 50%;
+  min-width: 0;
+  background: var(--black);
+  padding: 52px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+}
+.case:last-child { border-right: none }
+
+@media (max-width: 860px) {
+  .case {
+    flex: 0 0 100%;
+    padding: 44px 32px 48px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .case:last-child { border-bottom: none }
+}
+@media (max-width: 540px) {
+  .case { padding: 36px 24px 40px }
+  .cases-section { padding: 60px 0 48px }
+}
+
+/* tags */
+.case-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.case-pillar {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border: 1px solid currentColor;
+}
+.case-pillar.intelligence { color: var(--spark) }
+.case-pillar.strategy     { color: var(--gold-solid) }
+.case-pillar.studio       { color: var(--muted) }
+.case-sector {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* metric */
+.case-metric-block { margin-bottom: 36px }
+.case-metric {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(44px, 5.5vw, 72px);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.case-metric-label {
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* body sections */
+.case-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  flex: 1;
+}
+.case-section-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.case-section p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.case-section p.accent {
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.52;
+}
+
+/* context */
+.case-context {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* placeholder note */
+.note-placeholder {
+  color: var(--spark);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  font-style: normal;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ─── CAROUSEL NAV ───────────────────────────────────── */
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 24px;
+}
+.carousel-nav-left,
+.carousel-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.car-btn {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  padding: 12px 20px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.car-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--gold-solid);
+}
+.car-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.car-btn svg { flex-shrink: 0 }
+
+.carousel-counter {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  color: var(--muted);
+  text-align: center;
+}
+.carousel-counter strong {
+  color: var(--text);
+  font-weight: 400;
+}
+
+/* ─── CTAs ───────────────────────────────────────────── */
+.cta-primary {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #1a1410;
+  background: var(--gold-foil);
+  background-size: 220% auto;
+  background-position: 0% center;
+  padding: 14px 28px;
+  transition: background-position 0.5s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.cta-primary:hover { background-position: -110% center }
+
+/* ─── CLOSING ────────────────────────────────────────── */
+.closing {
+  padding: 140px 0;
+  text-align: center;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.closing h2 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4.4vw, 56px);
+  line-height: 1.12;
+  max-width: 22ch;
+  margin: 0 auto 16px;
+}
+.closing-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 40ch;
+  margin: 0 auto 44px;
+  line-height: 1.7;
+}
+.closing-reassure {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+@media (max-width: 600px) { .closing { padding: 100px 0 } }
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer { padding: 44px 0; border-top: 1px solid var(--line) }
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.foot-left { display: flex; align-items: center; gap: 28px; flex-wrap: wrap }
+.foot-logo svg { height: 16px; display: block; color: var(--muted) }
+.foot-copy { font-size: 13px; color: var(--muted); letter-spacing: 0.03em }
+.foot-right { display: flex; align-items: center; gap: 28px }
+.foot-right a {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+.foot-right a:hover { color: var(--text) }
+@media (max-width: 640px) { .foot { flex-direction: column; align-items: flex-start } }
+
+</style>
+</head>
+<body>
+
+
+<!-- HEADER -->
+<header>
+  <div class="wrap nav">
+    <a href="bcx-homepage-v1.html" class="nav-logo" aria-label="BCX Design">
+      <svg viewBox="0 0 151 61" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M10.7407 60.8267C10.8416 60.0326 10.5198 58.8638 10.9125 58.1788C11.0353 57.9642 12.6735 56.2514 13.0045 55.9058C13.5345 55.3527 14.3727 54.756 14.9291 54.193C22.3495 46.6834 29.8862 39.2721 37.2348 31.7125C41.9241 31.1085 46.5552 31.6315 50.4382 34.4785C58.7922 40.6028 58.0467 53.7291 49.0454 58.8565C47.7307 59.6051 44.6506 60.8267 43.196 60.8267H10.7407Z"/><path d="M10.7407 0.065979H43.3787C43.6924 0.065979 45.1888 0.445278 45.6116 0.560796C56.9594 3.6534 59.9886 18.3269 51.02 25.9038C47.0316 29.2729 42.1923 29.6113 37.1866 29.0019L10.9125 2.7138C10.5198 2.02978 10.8416 0.860051 10.7407 0.065979Z"/><path d="M31.2871 31.7197V34.3575L5.02306 60.6547C4.63122 60.8803 1.48197 60.9358 0.747393 60.934C0.595567 60.934 0.376465 60.8676 0.376465 60.7357V46.9099L15.559 31.7197H31.2871Z"/><path d="M4.64941 0.065979L30.3143 25.5982C31.5026 26.8825 31.3589 27.4128 31.2871 29.1729H15.559L0.376465 13.9827V0.065979H4.64941Z"/><path d="M120.502 40.3466L131.551 25.0735L120.726 10.1362H128.67L135.467 19.7867L142.153 10.1362H150.097L139.272 25.0735L150.377 40.3466H142.432L135.467 30.3604L128.446 40.3466H120.502Z"/><path d="M108.155 41.1857C105.041 41.1857 102.383 40.4958 100.183 39.1158C97.9822 37.7171 96.2945 35.815 95.1197 33.4094C93.9635 31.0037 93.3761 28.2811 93.3574 25.2414C93.3761 22.1457 93.9821 19.4044 95.1756 17.0174C96.3878 14.6118 98.1034 12.7283 100.323 11.367C102.542 9.98699 105.181 9.297 108.239 9.297C111.67 9.297 114.57 10.1641 116.938 11.8984C119.325 13.6141 120.882 15.9638 121.61 18.9475L114.896 20.7658C114.374 19.1433 113.507 17.8846 112.295 16.9895C111.083 16.0757 109.703 15.6188 108.155 15.6188C106.402 15.6188 104.957 16.0384 103.819 16.8776C102.682 17.6981 101.842 18.8356 101.302 20.2902C100.761 21.7448 100.49 23.3952 100.49 25.2414C100.49 28.1132 101.134 30.4349 102.421 32.2065C103.707 33.9781 105.619 34.8639 108.155 34.8639C109.945 34.8639 111.353 34.4537 112.379 33.6331C113.423 32.8126 114.206 31.6284 114.728 30.0806L121.61 31.6191C120.677 34.6961 119.046 37.0644 116.715 38.7242C114.383 40.3652 111.53 41.1857 108.155 41.1857Z"/><path d="M78.4365 41.1857C75.4901 41.1857 73.0192 40.4864 71.0238 39.0877C69.0284 37.6891 67.5272 35.787 66.5202 33.3813C65.5132 30.957 65.0097 28.2437 65.0097 25.2413C65.0097 22.2016 65.5132 19.479 66.5202 17.0733C67.5272 14.6677 69.0004 12.7749 70.9399 11.3949C72.8979 9.99625 75.3129 9.29693 78.1848 9.29693C81.038 9.29693 83.5089 9.99625 85.5975 11.3949C87.7048 12.7749 89.3365 14.6677 90.4927 17.0733C91.6489 19.4603 92.227 22.183 92.227 25.2413C92.227 28.2623 91.6582 30.9757 90.5207 33.3813C89.3831 35.787 87.7794 37.6891 85.7094 39.0877C83.6394 40.4864 81.2151 41.1857 78.4365 41.1857ZM63.8628 40.3465V0.065979H70.6601V19.1433H69.821V40.3465H63.8628ZM77.4015 35.1436C79.1545 35.1436 80.5997 34.7054 81.7373 33.8289C82.8748 32.9524 83.714 31.7682 84.2548 30.2764C84.8143 28.7659 85.094 27.0875 85.094 25.2413C85.094 23.4138 84.8143 21.7541 84.2548 20.2622C83.6954 18.7517 82.8282 17.5582 81.6534 16.6817C80.4785 15.7866 78.9866 15.339 77.1777 15.339C75.4621 15.339 74.0635 15.7586 72.9819 16.5978C71.9002 17.4183 71.0984 18.5745 70.5762 20.0664C70.0727 21.5396 69.821 23.2646 69.821 25.2413C69.821 27.1994 70.0727 28.9244 70.5762 30.4162C71.0984 31.9081 71.9096 33.0736 73.0098 33.9128C74.1287 34.7333 75.5926 35.1436 77.4015 35.1436Z"/><path d="M136.272 60.2052V45.1H139.167L145.734 55.1702V45.1H148.629V60.2052H145.734L139.167 50.1351V60.2052H136.272Z"/><path d="M125.127 60.5199C124.176 60.5199 123.271 60.3521 122.411 60.0164C121.55 59.6737 120.788 59.1702 120.124 58.5059C119.466 57.8415 118.945 57.0198 118.561 56.0408C118.183 55.0618 117.994 53.9324 117.994 52.6526C117.994 50.9813 118.313 49.5617 118.949 48.3938C119.592 47.219 120.452 46.3238 121.529 45.7084C122.613 45.093 123.813 44.7853 125.127 44.7853C127.071 44.7853 128.599 45.2364 129.711 46.1385C130.823 47.0406 131.568 48.3169 131.946 49.9673L129.03 50.3868C128.757 49.5057 128.309 48.8029 127.687 48.2784C127.071 47.7469 126.281 47.4777 125.316 47.4707C124.358 47.4567 123.561 47.663 122.925 48.0896C122.288 48.5162 121.809 49.1211 121.487 49.9043C121.173 50.6876 121.015 51.6037 121.015 52.6526C121.015 53.7016 121.173 54.6107 121.487 55.38C121.809 56.1492 122.288 56.7471 122.925 57.1737C123.561 57.6003 124.358 57.8206 125.316 57.8345C125.967 57.8485 126.554 57.7366 127.078 57.4989C127.61 57.2611 128.058 56.887 128.421 56.3765C128.785 55.866 129.044 55.2121 129.197 54.4149H126.806V52.2121H132.239C132.253 52.303 132.264 52.4638 132.271 52.6946C132.278 52.9254 132.281 53.0582 132.281 53.0932C132.281 54.5408 131.988 55.824 131.4 56.9429C130.813 58.0618 129.984 58.9395 128.914 59.5758C127.844 60.2052 126.582 60.5199 125.127 60.5199Z"/><path d="M110.948 60.2052V45.1H113.801V60.2052H110.948Z"/><path d="M100.481 60.5199C99.3619 60.5199 98.3514 60.3241 97.4493 59.9325C96.5542 59.5339 95.8164 58.9674 95.2359 58.2332C94.6625 57.4919 94.2989 56.6107 94.145 55.5897L97.1241 55.1492C97.3339 56.0163 97.7675 56.6842 98.4248 57.1527C99.0822 57.6213 99.8304 57.8555 100.67 57.8555C101.138 57.8555 101.593 57.7821 102.033 57.6352C102.474 57.4884 102.834 57.2716 103.114 56.9849C103.4 56.6982 103.544 56.345 103.544 55.9254C103.544 55.7716 103.519 55.6247 103.47 55.4848C103.428 55.338 103.355 55.2016 103.25 55.0757C103.145 54.9499 102.995 54.831 102.799 54.7191C102.61 54.6072 102.369 54.5058 102.075 54.4149L98.1521 53.261C97.8584 53.1771 97.5157 53.0582 97.1241 52.9044C96.7395 52.7505 96.3653 52.5302 96.0017 52.2435C95.6381 51.9568 95.3339 51.5792 95.0891 51.1106C94.8513 50.6351 94.7324 50.0372 94.7324 49.3169C94.7324 48.3029 94.9877 47.4602 95.4982 46.7889C96.0087 46.1175 96.6905 45.6175 97.5437 45.2888C98.3969 44.9602 99.3409 44.7993 100.376 44.8063C101.418 44.8203 102.348 44.9986 103.166 45.3413C103.984 45.6839 104.67 46.184 105.222 46.8413C105.775 47.4917 106.173 48.2889 106.418 49.233L103.334 49.7575C103.222 49.2679 103.016 48.8553 102.715 48.5197C102.414 48.184 102.054 47.9287 101.635 47.7539C101.222 47.5791 100.789 47.4847 100.334 47.4707C99.8864 47.4567 99.4633 47.5197 99.0647 47.6595C98.6731 47.7924 98.3514 47.9882 98.0996 48.2469C97.8549 48.5057 97.7325 48.8134 97.7325 49.17C97.7325 49.4987 97.8339 49.7679 98.0367 49.9777C98.2395 50.1805 98.4948 50.3449 98.8025 50.4708C99.1102 50.5966 99.4248 50.7015 99.7465 50.7854L102.369 51.4987C102.761 51.6036 103.194 51.7435 103.67 51.9183C104.145 52.0862 104.6 52.3239 105.033 52.6316C105.474 52.9323 105.834 53.331 106.114 53.8275C106.401 54.324 106.544 54.9534 106.544 55.7156C106.544 56.5268 106.373 57.2366 106.03 57.845C105.694 58.4464 105.24 58.9465 104.666 59.3451C104.093 59.7367 103.442 60.0304 102.715 60.2262C101.995 60.422 101.25 60.5199 100.481 60.5199Z"/><path d="M80.5117 60.2052V45.1H90.3721V47.7644H83.3649V50.9953H89.1133V53.6596H83.3649V57.5408H90.3721V60.2052H80.5117Z"/><path d="M63.729 60.2052V45.1H68.6172C68.7361 45.1 68.9809 45.1035 69.3515 45.1105C69.7221 45.1175 70.0788 45.142 70.4214 45.184C71.6383 45.3308 72.6697 45.7539 73.5159 46.4532C74.3621 47.1525 75.0055 48.0407 75.446 49.1176C75.8866 50.1945 76.1069 51.3729 76.1069 52.6526C76.1069 53.9324 75.8866 55.1107 75.446 56.1877C75.0055 57.2646 74.3621 58.1527 73.5159 58.8521C72.6697 59.5514 71.6383 59.9745 70.4214 60.1213C70.0788 60.1633 69.7221 60.1877 69.3515 60.1947C68.9809 60.2017 68.7361 60.2052 68.6172 60.2052H63.729ZM66.6242 57.5199H68.6172C68.806 57.5199 69.0613 57.5164 69.383 57.5094C69.7046 57.4954 69.9949 57.4639 70.2536 57.415C70.911 57.2821 71.4459 56.9744 71.8585 56.4919C72.2781 56.0093 72.5858 55.4289 72.7816 54.7506C72.9844 54.0722 73.0858 53.3729 73.0858 52.6526C73.0858 51.8974 72.9809 51.1806 72.7711 50.5022C72.5683 49.8239 72.2571 49.2505 71.8376 48.7819C71.418 48.3134 70.89 48.0162 70.2536 47.8903C69.9949 47.8344 69.7046 47.8029 69.383 47.7959C69.0613 47.7889 68.806 47.7854 68.6172 47.7854H66.6242V57.5199Z"/></g></svg>
+    </a>
+    <nav class="navlinks" aria-label="Primary navigation">
+      <a href="#">Intelligence</a>
+      <a href="#">Strategy</a>
+      <a href="#">Studio</a>
+      <a href="#" class="active">Work</a>
+      <a href="#">About</a>
+    </nav>
+    <a href="#book" class="nav-book">Book a Call</a>
+  </div>
+</header>
+
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg" aria-hidden="true">
+    <img src="images/work-hero-bowl.jpg" alt="">
+  </div>
+  <div class="page-hero-overlay" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="breadcrumb rise">
+      <a href="bcx-homepage-v1.html">Home</a>
+      <span>/</span>
+      <span style="color:var(--text)">Work</span>
+    </div>
+    <h1 class="rise">
+      The results we are most proud of are the ones the client <em class="foil">did not think to ask for.</em>
+    </h1>
+    <p class="page-hero-sub rise">Across B2B, B2C, B2B2C, and public sector organisations in APAC, North America, and Europe. Every outcome here began with finding the problem behind the problem.</p>
+  </div>
+</section>
+
+
+<!-- SEAM -->
+<div class="seam" aria-hidden="true">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#6e4f17"/><stop offset="0.18" stop-color="#cda14d"/>
+        <stop offset="0.36" stop-color="#f6e6ad"/><stop offset="0.45" stop-color="#fffbe6"/>
+        <stop offset="0.56" stop-color="#ddb74f"/><stop offset="0.76" stop-color="#9c7328"/>
+        <stop offset="1" stop-color="#e2bf66"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 12 L150 10 L210 15 L300 8 L360 13 L470 9 L540 16 L640 11 L700 6 L820 14 L900 9 L980 15 L1080 10 L1140 14 L1200 11" fill="none" stroke="url(#g1)" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M360 13 L388 5 M640 11 L662 20 M900 9 L924 3" fill="none" stroke="url(#g1)" stroke-width="0.8" opacity="0.7"/>
+  </svg>
+  <span class="seam-glint" aria-hidden="true"></span>
+</div>
+
+
+<!-- CAROUSEL -->
+<section class="cases-section">
+  <div class="wrap">
+
+    <!-- CAROUSEL NAVIGATION -->
+    <div class="carousel-nav" aria-label="Carousel controls">
+      <div class="carousel-nav-left">
+        <div class="carousel-counter" aria-live="polite">
+          <strong id="carCurrent">01</strong>
+          <span id="carTotal"> / 06</span>
+        </div>
+      </div>
+      <div class="carousel-nav-right">
+        <button class="car-btn" id="carPrev" aria-label="Previous cases" disabled>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 10L4 6L8 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Prev
+        </button>
+        <button class="car-btn" id="carNext" aria-label="Next cases">
+          Next
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M4 2L8 6L4 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="carousel-viewport" id="carousel" aria-label="Case studies" role="region">
+      <div class="carousel-track" id="carTrack">
+
+
+        <!-- 01 — UN FAO -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar intelligence">Intelligence</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Global UN Agency · Operations & Governance</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-70%</h2>
+            <p class="case-metric-label">Reduction in process time<br>Weeks became days</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Project approval cycles were running up to two months. Leadership described it as a culture problem — teams were too conservative, too slow to change.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>The culture was a symptom. The approval process had been designed in ways that made cautious, slow decisions the default outcome regardless of who was making them. Sixteen distinct points where cognitive bias had been built into the system architecture.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We rebuilt the risk assessment and approval workflow, removed the structural incentives for delay, and designed an AI-assisted tool to accelerate evidence-based decisions. Standard project evaluations moved from weeks to days.</p>
+            </div>
+          </div>
+          <p class="case-context">Thirty procedural bottlenecks identified. Multi-phase digital roadmap delivered for full ERP modernisation.</p>
+        </div>
+
+
+        <!-- 02 — GMP -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar strategy">Strategy</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Smart Cities Technology · B2B Sales · India / Global</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-61%</h2>
+            <p class="case-metric-label">Reduction in average deal cycle<br>Pipeline volume 3× its original size</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">The sales cycle was running at 18 months on average. Leadership assumed the sales team needed better training or a stronger pitch.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>The team was capable. A smart cities deployment involves multiple stakeholders — planners, procurement, technical leads, executive sponsors — each with different questions at different stages. The existing materials treated them as one audience. Nobody was getting what they needed when they needed it, so decisions stalled.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We rebuilt how information reached each stakeholder, aligned sales and marketing around a shared CRM with automated sequences, and redesigned coaching so learning compounded. Acquisition cost per deal dropped by 74%. Customer payback period fell from 29 months to under 10.</p>
+            </div>
+          </div>
+          <p class="case-context">$640,000 freed across the pipeline. Annual revenue trajectory scaled from $2M toward $5M following the engagement.</p>
+        </div>
+
+
+        <!-- 03 — Gene Box -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar strategy">Strategy</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Preventative Health Venture · Product & Go-To-Market · India</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">$150K</h2>
+            <p class="case-metric-label">ARR secured at launch<br>Product built end-to-end from research</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">The venture had a DNA-based preventative health product for high-income urban consumers. Despite rising regional health risks, sustained engagement was proving very difficult to generate.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>Health risk awareness alone does not change behaviour. The product needed to connect daily actions to long-term outcomes in a way that felt immediate, social, and achievable — not clinical. The go-to-market approach was treating the audience as rational actors responding to information, which is not how health behaviour works.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We ran primary research, built the brand positioning, designed the GTM strategy, created the product UX and gamification architecture, and developed the coaching programme for the clinical team. Gamified screening blended with habit tracking, social comparison, and one-to-one health coaching.</p>
+            </div>
+          </div>
+          <p class="case-context">Full-stack engagement: research, brand, product, go-to-market, and capability development. Product launched ready to scale into a funding round.</p>
+        </div>
+
+
+        <!-- 04 — NocNoc -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Consumer Marketplace · Digital Commerce · Thailand</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">+300%</h2>
+            <p class="case-metric-label">Increase in monthly purchases<br>Average order value up 200%</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Users were arriving on the platform but not buying. They were browsing, comparing prices, and leaving. The platform was being used as a research tool, not a commerce destination.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>Choice overload was causing selection paralysis at the point of decision. The experience had been designed around what the platform sold, not how their customers actually shop. Too many options, no progressive structure, no momentum toward purchase.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We built the native app and launch campaign from the ground up around how users actually browse and decide. Progressive product discovery, persona-based onboarding, AI-driven relevance, and embedded behavioural nudges to sustain buying momentum. Results within three months of launch.</p>
+            </div>
+          </div>
+          <p class="case-context">The platform's commercial performance supported a significant institutional investment round following the engagement.</p>
+        </div>
+
+
+        <!-- 05 — Scotiabank -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar intelligence">Intelligence</span>
+            <span class="case-pillar strategy">Strategy</span>
+            <span class="case-sector">Major Retail Bank · Workforce Transformation · North America</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-80%</h2>
+            <p class="case-metric-label">Reduction in first-year resignations<br>From 60% attrition to near-zero</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Six in every ten new branch advisors were leaving within their first year. Recruitment costs were high and institutional knowledge was not accumulating.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>Onboarding was built around passive learning — reading assignments, compliance modules, theory. New advisors spent weeks absorbing information before they were permitted to do anything meaningful with a real client. By the time they had their first real interaction, they had neither the confidence nor the peer network to handle it.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We redesigned the training sequence so new advisors opened real accounts on Day 1, supported by live simulations, a peer mentoring community, and real-time dashboards connecting individual progress to branch benchmarks.</p>
+            </div>
+          </div>
+          <p class="case-context">Total training duration reduced by 40%. Customer satisfaction scores improved by 29 points (NPS).</p>
+        </div>
+
+
+        <!-- 06 — HSBC -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar intelligence">Intelligence</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Global Financial Institution · Digital Self-Service · Singapore</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-30%</h2>
+            <p class="case-metric-label">In-branch card replacements<br>Migrated to digital self-service</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Customers were still walking into branches for routine card replacements despite digital self-service tools being widely available. Branch traffic and operating costs remained stubbornly high.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>The digital tools existed. The interface was the problem. The online application had been designed around internal processes, not around how a customer thinks when they need to replace a card quickly. Confusion at key decision moments was sending people back to branches.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We conducted a full behavioural audit of the digital interface, identified the specific friction points driving branch visits, and redesigned the application experience around how customers actually navigate it under real conditions.</p>
+            </div>
+          </div>
+          <p class="case-context">Customer loyalty metrics improved alongside the reduction in branch traffic as the digital experience became genuinely easier to trust.</p>
+        </div>
+
+
+        <!-- 07 — Telus -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar intelligence">Intelligence</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">National Telecommunications Provider · Customer Experience · Canada</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-50%</h2>
+            <p class="case-metric-label">Reduction in support operating costs<br>Across live call centre operations</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Long-term subscribers felt unrecognised every time they contacted support despite years of payment history. Retention metrics were declining and support costs were rising together.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>Customer behaviour data existed across multiple internal systems but was siloed. Every support interaction started from zero context. Agents had no way to surface a customer's history quickly, so the frustration subscribers felt was a direct consequence of how the internal architecture had been designed, not a training failure.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We audited interaction histories across systems, surfaced latent behaviour patterns, then deployed AI agents to deliver real-time context to live representatives during calls. Agents could finally respond as if they knew the customer. Support costs halved.</p>
+            </div>
+          </div>
+          <p class="case-context">Multi-system data processing automated. Cross-sell and up-sell performance improved as representatives gained the context to have relevant conversations.</p>
+        </div>
+
+
+        <!-- 08 — Sqrrl -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Personal Finance Fintech · User Onboarding · India</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">+29%</h2>
+            <p class="case-metric-label">Onboarding conversion<br>Abandonment reduced by over 30%</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Users were downloading the app and starting account creation but dropping off before completing it. A large share of interested users were never converting to active accounts.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>Regulatory requirements for a savings and investment account are genuinely complex — but the app was presenting them all at once. Most users were accessing it during short breaks at work. The cognitive load exceeded the time and attention they actually had available.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We broke the onboarding into micro-steps sized for the user's real context, reduced the information shown at any one point, and built automated reminders at times users themselves selected rather than times that suited the platform.</p>
+            </div>
+          </div>
+          <p class="case-context">The venture was subsequently acquired in 2022, with the improved onboarding conversion contributing to the commercial case for acquisition.</p>
+        </div>
+
+
+        <!-- 09 — Alliance Bioversity -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar intelligence">Intelligence</span>
+            <span class="case-pillar strategy">Strategy</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">International Research Organisation · Operations · Global</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">&lt;5 days</h2>
+            <p class="case-metric-label">Target disbursement speed<br>Down from 80+ days</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">Sub-grant clearances were taking up to 80 days. Disbursements were taking 34. Teams were regularly missing payment cycles entirely due to manual process failures.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>End-to-end process mapping identified 30 distinct procedural bottlenecks — many of which had accumulated through years of informal workarounds rather than deliberate design. The treasury function lacked the automation and visibility to manage payment cycles reliably across a decentralised partner network.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We standardised the process architecture, built centralised KPI tracking across teams, expanded automated payment capabilities, and delivered a phased digital roadmap for full ERP modernisation.</p>
+            </div>
+          </div>
+          <p class="case-context">Multi-phase digital roadmap established as the foundation for the organisation's ongoing operational transformation.</p>
+        </div>
+
+
+        <!-- 10 — CloudCherry -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar strategy">Strategy</span>
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Customer Experience SaaS · International Market Entry · India</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">-30%</h2>
+            <p class="case-metric-label">Sales onboarding costs<br>US enterprise market penetration achieved</p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">A customer experience software startup had a strong product but was struggling to build pipeline in the US enterprise market. Their inside sales team was capable but not converting.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>The gap was not product capability. US enterprise procurement involves different stakeholder maps, evaluation criteria, and relationship norms than the markets the team knew well. The sales approach was not calibrated to how US buyers actually make technology decisions.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We built a targeted onboarding programme around US enterprise buyer demographics, decision-making structures, and product application by use case. The team's ability to qualify, develop, and close US prospects improved measurably.</p>
+            </div>
+          </div>
+          <p class="case-context">International pipeline development costs reduced significantly. The company subsequently achieved successful acquisition.</p>
+        </div>
+
+
+        <!-- 11 — Bethel AG -->
+        <div class="case" role="article">
+          <div class="case-tags">
+            <span class="case-pillar studio">Studio</span>
+            <span class="case-sector">Faith-Based Community Organisation · Digital Operations & Engagement</span>
+          </div>
+          <div class="case-metric-block">
+            <h2 class="case-metric foil">3 → 1</h2>
+            <p class="case-metric-label">Manual operational workflows unified into a single platform
+              <span class="note-placeholder">Replace with performance metric when confirmed</span>
+            </p>
+          </div>
+          <div class="case-body">
+            <div class="case-section">
+              <h3 class="case-section-label">The problem</h3>
+              <p class="accent">A growing congregation with an increasingly younger, digitally native membership was struggling to maintain meaningful connection beyond the physical service. Attendance tracking, child check-ins, and donation flows were all running on manual processes that created weekly bottlenecks.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What we found</h3>
+              <p>The organisation was asking its members to interrupt their physical experience with administrative friction. The digital tools available were not designed around how people actually move through a service environment. Engagement dropped wherever the friction was highest.</p>
+            </div>
+            <div class="case-section">
+              <h3 class="case-section-label">What changed</h3>
+              <p>We mapped real-world member movement patterns within the physical space and designed an integrated platform around them. Geofenced attendance logging, automated notifications, child check-in, and mobile payment gateways — consolidated into a single experience that worked with how members were already moving.</p>
+            </div>
+          </div>
+          <p class="case-context">Attendance tracking, family registration, and donation channels unified across all service touchpoints into a single integrated platform.</p>
+        </div>
+
+
+      </div><!-- end .carousel-track -->
+    </div><!-- end .carousel-viewport -->
+
+  </div>
+</section>
+
+
+<!-- SEAM -->
+<div class="seam" aria-hidden="true" style="transform:scaleX(-1)">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#6e4f17"/><stop offset="0.18" stop-color="#cda14d"/>
+        <stop offset="0.36" stop-color="#f6e6ad"/><stop offset="0.45" stop-color="#fffbe6"/>
+        <stop offset="0.56" stop-color="#ddb74f"/><stop offset="0.76" stop-color="#9c7328"/>
+        <stop offset="1" stop-color="#e2bf66"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 12 L150 10 L210 15 L300 8 L360 13 L470 9 L540 16 L640 11 L700 6 L820 14 L900 9 L980 15 L1080 10 L1140 14 L1200 11" fill="none" stroke="url(#g2)" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+
+<!-- CLOSING -->
+<section class="closing" id="book">
+  <div class="wrap">
+    <h2 class="rise">If something is not working the way it should, the answer is usually <em class="foil">closer than you think.</em></h2>
+    <p class="closing-sub rise">It starts with understanding exactly what is broken and why.</p>
+    <a href="#" class="cta-primary rise">Book a Call</a>
+    <p class="closing-reassure rise">A first conversation costs nothing and commits you to nothing.<br>We will tell you honestly whether we can help.</p>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <div class="foot-left">
+      <a href="bcx-homepage-v1.html" class="foot-logo" aria-label="BCX Design">
+        <svg viewBox="0 0 151 61" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="currentColor"><path d="M10.7407 60.8267C10.8416 60.0326 10.5198 58.8638 10.9125 58.1788C11.0353 57.9642 12.6735 56.2514 13.0045 55.9058C13.5345 55.3527 14.3727 54.756 14.9291 54.193C22.3495 46.6834 29.8862 39.2721 37.2348 31.7125C41.9241 31.1085 46.5552 31.6315 50.4382 34.4785C58.7922 40.6028 58.0467 53.7291 49.0454 58.8565C47.7307 59.6051 44.6506 60.8267 43.196 60.8267H10.7407Z"/><path d="M10.7407 0.065979H43.3787C43.6924 0.065979 45.1888 0.445278 45.6116 0.560796C56.9594 3.6534 59.9886 18.3269 51.02 25.9038C47.0316 29.2729 42.1923 29.6113 37.1866 29.0019L10.9125 2.7138C10.5198 2.02978 10.8416 0.860051 10.7407 0.065979Z"/><path d="M31.2871 31.7197V34.3575L5.02306 60.6547C4.63122 60.8803 1.48197 60.9358 0.747393 60.934C0.595567 60.934 0.376465 60.8676 0.376465 60.7357V46.9099L15.559 31.7197H31.2871Z"/><path d="M4.64941 0.065979L30.3143 25.5982C31.5026 26.8825 31.3589 27.4128 31.2871 29.1729H15.559L0.376465 13.9827V0.065979H4.64941Z"/><path d="M120.502 40.3466L131.551 25.0735L120.726 10.1362H128.67L135.467 19.7867L142.153 10.1362H150.097L139.272 25.0735L150.377 40.3466H142.432L135.467 30.3604L128.446 40.3466H120.502Z"/><path d="M108.155 41.1857C105.041 41.1857 102.383 40.4958 100.183 39.1158C97.9822 37.7171 96.2945 35.815 95.1197 33.4094C93.9635 31.0037 93.3761 28.2811 93.3574 25.2414C93.3761 22.1457 93.9821 19.4044 95.1756 17.0174C96.3878 14.6118 98.1034 12.7283 100.323 11.367C102.542 9.98699 105.181 9.297 108.239 9.297C111.67 9.297 114.57 10.1641 116.938 11.8984C119.325 13.6141 120.882 15.9638 121.61 18.9475L114.896 20.7658C114.374 19.1433 113.507 17.8846 112.295 16.9895C111.083 16.0757 109.703 15.6188 108.155 15.6188C106.402 15.6188 104.957 16.0384 103.819 16.8776C102.682 17.6981 101.842 18.8356 101.302 20.2902C100.761 21.7448 100.49 23.3952 100.49 25.2414C100.49 28.1132 101.134 30.4349 102.421 32.2065C103.707 33.9781 105.619 34.8639 108.155 34.8639C109.945 34.8639 111.353 34.4537 112.379 33.6331C113.423 32.8126 114.206 31.6284 114.728 30.0806L121.61 31.6191C120.677 34.6961 119.046 37.0644 116.715 38.7242C114.383 40.3652 111.53 41.1857 108.155 41.1857Z"/><path d="M78.4365 41.1857C75.4901 41.1857 73.0192 40.4864 71.0238 39.0877C69.0284 37.6891 67.5272 35.787 66.5202 33.3813C65.5132 30.957 65.0097 28.2437 65.0097 25.2413C65.0097 22.2016 65.5132 19.479 66.5202 17.0733C67.5272 14.6677 69.0004 12.7749 70.9399 11.3949C72.8979 9.99625 75.3129 9.29693 78.1848 9.29693C81.038 9.29693 83.5089 9.99625 85.5975 11.3949C87.7048 12.7749 89.3365 14.6677 90.4927 17.0733C91.6489 19.4603 92.227 22.183 92.227 25.2413C92.227 28.2623 91.6582 30.9757 90.5207 33.3813C89.3831 35.787 87.7794 37.6891 85.7094 39.0877C83.6394 40.4864 81.2151 41.1857 78.4365 41.1857ZM63.8628 40.3465V0.065979H70.6601V19.1433H69.821V40.3465H63.8628ZM77.4015 35.1436C79.1545 35.1436 80.5997 34.7054 81.7373 33.8289C82.8748 32.9524 83.714 31.7682 84.2548 30.2764C84.8143 28.7659 85.094 27.0875 85.094 25.2413C85.094 23.4138 84.8143 21.7541 84.2548 20.2622C83.6954 18.7517 82.8282 17.5582 81.6534 16.6817C80.4785 15.7866 78.9866 15.339 77.1777 15.339C75.4621 15.339 74.0635 15.7586 72.9819 16.5978C71.9002 17.4183 71.0984 18.5745 70.5762 20.0664C70.0727 21.5396 69.821 23.2646 69.821 25.2413C69.821 27.1994 70.0727 28.9244 70.5762 30.4162C71.0984 31.9081 71.9096 33.0736 73.0098 33.9128C74.1287 34.7333 75.5926 35.1436 77.4015 35.1436Z"/><path d="M136.272 60.2052V45.1H139.167L145.734 55.1702V45.1H148.629V60.2052H145.734L139.167 50.1351V60.2052H136.272Z"/><path d="M125.127 60.5199C124.176 60.5199 123.271 60.3521 122.411 60.0164C121.55 59.6737 120.788 59.1702 120.124 58.5059C119.466 57.8415 118.945 57.0198 118.561 56.0408C118.183 55.0618 117.994 53.9324 117.994 52.6526C117.994 50.9813 118.313 49.5617 118.949 48.3938C119.592 47.219 120.452 46.3238 121.529 45.7084C122.613 45.093 123.813 44.7853 125.127 44.7853C127.071 44.7853 128.599 45.2364 129.711 46.1385C130.823 47.0406 131.568 48.3169 131.946 49.9673L129.03 50.3868C128.757 49.5057 128.309 48.8029 127.687 48.2784C127.071 47.7469 126.281 47.4777 125.316 47.4707C124.358 47.4567 123.561 47.663 122.925 48.0896C122.288 48.5162 121.809 49.1211 121.487 49.9043C121.173 50.6876 121.015 51.6037 121.015 52.6526C121.015 53.7016 121.173 54.6107 121.487 55.38C121.809 56.1492 122.288 56.7471 122.925 57.1737C123.561 57.6003 124.358 57.8206 125.316 57.8345C125.967 57.8485 126.554 57.7366 127.078 57.4989C127.61 57.2611 128.058 56.887 128.421 56.3765C128.785 55.866 129.044 55.2121 129.197 54.4149H126.806V52.2121H132.239C132.253 52.303 132.264 52.4638 132.271 52.6946C132.278 52.9254 132.281 53.0582 132.281 53.0932C132.281 54.5408 131.988 55.824 131.4 56.9429C130.813 58.0618 129.984 58.9395 128.914 59.5758C127.844 60.2052 126.582 60.5199 125.127 60.5199Z"/><path d="M110.948 60.2052V45.1H113.801V60.2052H110.948Z"/><path d="M100.481 60.5199C99.3619 60.5199 98.3514 60.3241 97.4493 59.9325C96.5542 59.5339 95.8164 58.9674 95.2359 58.2332C94.6625 57.4919 94.2989 56.6107 94.145 55.5897L97.1241 55.1492C97.3339 56.0163 97.7675 56.6842 98.4248 57.1527C99.0822 57.6213 99.8304 57.8555 100.67 57.8555C101.138 57.8555 101.593 57.7821 102.033 57.6352C102.474 57.4884 102.834 57.2716 103.114 56.9849C103.4 56.6982 103.544 56.345 103.544 55.9254C103.544 55.7716 103.519 55.6247 103.47 55.4848C103.428 55.338 103.355 55.2016 103.25 55.0757C103.145 54.9499 102.995 54.831 102.799 54.7191C102.61 54.6072 102.369 54.5058 102.075 54.4149L98.1521 53.261C97.8584 53.1771 97.5157 53.0582 97.1241 52.9044C96.7395 52.7505 96.3653 52.5302 96.0017 52.2435C95.6381 51.9568 95.3339 51.5792 95.0891 51.1106C94.8513 50.6351 94.7324 50.0372 94.7324 49.3169C94.7324 48.3029 94.9877 47.4602 95.4982 46.7889C96.0087 46.1175 96.6905 45.6175 97.5437 45.2888C98.3969 44.9602 99.3409 44.7993 100.376 44.8063C101.418 44.8203 102.348 44.9986 103.166 45.3413C103.984 45.6839 104.67 46.184 105.222 46.8413C105.775 47.4917 106.173 48.2889 106.418 49.233L103.334 49.7575C103.222 49.2679 103.016 48.8553 102.715 48.5197C102.414 48.184 102.054 47.9287 101.635 47.7539C101.222 47.5791 100.789 47.4847 100.334 47.4707C99.8864 47.4567 99.4633 47.5197 99.0647 47.6595C98.6731 47.7924 98.3514 47.9882 98.0996 48.2469C97.8549 48.5057 97.7325 48.8134 97.7325 49.17C97.7325 49.4987 97.8339 49.7679 98.0367 49.9777C98.2395 50.1805 98.4948 50.3449 98.8025 50.4708C99.1102 50.5966 99.4248 50.7015 99.7465 50.7854L102.369 51.4987C102.761 51.6036 103.194 51.7435 103.67 51.9183C104.145 52.0862 104.6 52.3239 105.033 52.6316C105.474 52.9323 105.834 53.331 106.114 53.8275C106.401 54.324 106.544 54.9534 106.544 55.7156C106.544 56.5268 106.373 57.2366 106.03 57.845C105.694 58.4464 105.24 58.9465 104.666 59.3451C104.093 59.7367 103.442 60.0304 102.715 60.2262C101.995 60.422 101.25 60.5199 100.481 60.5199Z"/><path d="M80.5117 60.2052V45.1H90.3721V47.7644H83.3649V50.9953H89.1133V53.6596H83.3649V57.5408H90.3721V60.2052H80.5117Z"/><path d="M63.729 60.2052V45.1H68.6172C68.7361 45.1 68.9809 45.1035 69.3515 45.1105C69.7221 45.1175 70.0788 45.142 70.4214 45.184C71.6383 45.3308 72.6697 45.7539 73.5159 46.4532C74.3621 47.1525 75.0055 48.0407 75.446 49.1176C75.8866 50.1945 76.1069 51.3729 76.1069 52.6526C76.1069 53.9324 75.8866 55.1107 75.446 56.1877C75.0055 57.2646 74.3621 58.1527 73.5159 58.8521C72.6697 59.5514 71.6383 59.9745 70.4214 60.1213C70.0788 60.1633 69.7221 60.1877 69.3515 60.1947C68.9809 60.2017 68.7361 60.2052 68.6172 60.2052H63.729ZM66.6242 57.5199H68.6172C68.806 57.5199 69.0613 57.5164 69.383 57.5094C69.7046 57.4954 69.9949 57.4639 70.2536 57.415C70.911 57.2821 71.4459 56.9744 71.8585 56.4919C72.2781 56.0093 72.5858 55.4289 72.7816 54.7506C72.9844 54.0722 73.0858 53.3729 73.0858 52.6526C73.0858 51.8974 72.9809 51.1806 72.7711 50.5022C72.5683 49.8239 72.2571 49.2505 71.8376 48.7819C71.418 48.3134 70.89 48.0162 70.2536 47.8903C69.9949 47.8344 69.7046 47.8029 69.383 47.7959C69.0613 47.7889 68.806 47.7854 68.6172 47.7854H66.6242V57.5199Z"/></g></svg>
+      </a>
+      <span class="foot-copy">© 2026 BCX Design Pte Ltd · Behavioural science, made tangible</span>
+    </div>
+    <div class="foot-right">
+      <a href="#">Singapore · Bangkok</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* ─── SCROLL REVEAL ─────────────────────────────────── */
+(function () {
+  var rises = document.querySelectorAll('.rise');
+  if (!('IntersectionObserver' in window)) {
+    rises.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
+  rises.forEach(function (el) { io.observe(el); });
+  setTimeout(function () {
+    document.querySelectorAll('.rise:not(.in)').forEach(function (el) { el.classList.add('in'); });
+  }, 600);
+}());
+
+/* ─── CAROUSEL ──────────────────────────────────────── */
+(function () {
+  var viewport  = document.getElementById('carousel');
+  var track     = document.getElementById('carTrack');
+  var btnPrev   = document.getElementById('carPrev');
+  var btnNext   = document.getElementById('carNext');
+  var elCurrent = document.getElementById('carCurrent');
+  var elTotal   = document.getElementById('carTotal');
+  var cases     = Array.from(track.querySelectorAll('.case'));
+  var TOTAL     = cases.length;  /* 11 */
+  var page      = 0;
+  var resizeTimer;
+
+  /* how many cards are visible at once */
+  function perPage() {
+    return window.innerWidth <= 860 ? 1 : 2;
+  }
+
+  function totalPages() {
+    return Math.ceil(TOTAL / perPage());
+  }
+
+  /* set each card's pixel width to match the viewport exactly */
+  function setCardWidths() {
+    var w = viewport.offsetWidth;
+    var pp = perPage();
+    var cardW = Math.floor(w / pp);
+    cases.forEach(function (c) {
+      c.style.width    = cardW + 'px';
+      c.style.minWidth = cardW + 'px';
+    });
+  }
+
+  function goTo(p) {
+    var tp = totalPages();
+    page = Math.max(0, Math.min(tp - 1, p));
+
+    /* offset = page × viewport width in px */
+    var offset = page * viewport.offsetWidth;
+    track.style.transform = 'translateX(-' + offset + 'px)';
+
+    /* counter: show page range e.g. "01 / 06" */
+    elCurrent.textContent = String(page + 1).padStart(2, '0');
+    elTotal.textContent   = ' / ' + String(tp).padStart(2, '0');
+
+    btnPrev.disabled = page === 0;
+    btnNext.disabled = page === tp - 1;
+  }
+
+  function init() {
+    setCardWidths();
+    goTo(0);
+  }
+
+  btnPrev.addEventListener('click', function () { goTo(page - 1); });
+  btnNext.addEventListener('click', function () { goTo(page + 1); });
+
+  /* recalculate on resize — debounced */
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      setCardWidths();
+      goTo(Math.min(page, totalPages() - 1));
+    }, 120);
+  });
+
+  /* touch/swipe support */
+  var touchStartX = 0;
+  track.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  track.addEventListener('touchend', function (e) {
+    var diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goTo(page + 1) : goTo(page - 1);
+    }
+  }, { passive: true });
+
+  init();
+}());
+</script>
+
+</body>
+</html>
