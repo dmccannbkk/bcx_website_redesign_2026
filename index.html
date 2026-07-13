@@ -554,6 +554,83 @@ footer {
   .foot { flex-direction: column; align-items: flex-start }
 }
 
+.foot-socials {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.foot-socials a {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  transition: color 0.25s;
+}
+.foot-socials a:hover { color: var(--text) }
+.foot-socials svg { width: 17px; height: 17px; display: block }
+
+/* ─── PRIVACY MODAL ──────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.82);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  padding: 60px 20px;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: block }
+.modal-box {
+  max-width: 780px;
+  margin: 0 auto;
+  background: var(--black);
+  border: 1px solid var(--line);
+  padding: 48px 52px 56px;
+  position: relative;
+}
+@media (max-width: 640px) {
+  .modal-overlay { padding: 32px 12px }
+  .modal-box { padding: 40px 24px 44px }
+}
+.modal-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  width: 32px; height: 32px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s;
+}
+.modal-close:hover { color: var(--text); border-color: var(--gold-solid) }
+.modal-box h2 {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(24px, 3.2vw, 34px);
+  margin-bottom: 8px; padding-right: 40px;
+}
+.modal-updated {
+  font-size: 12px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 32px; display: block;
+}
+.modal-box h3 {
+  font-family: var(--serif); font-weight: 400;
+  font-size: 19px; color: var(--text);
+  margin-top: 30px; margin-bottom: 12px;
+}
+.modal-box p, .modal-box li {
+  font-size: 14.5px; color: var(--muted);
+  line-height: 1.75; margin-bottom: 12px;
+}
+.modal-box ul { padding-left: 20px; margin-bottom: 12px }
+.modal-box strong { color: var(--text); font-weight: 500 }
+.modal-box a { color: var(--gold-solid); border-bottom: 1px solid var(--gold-solid) }
+.modal-box a:hover { color: var(--text); border-color: var(--text) }
+
 </style>
 </head>
 <body>
@@ -620,9 +697,9 @@ footer {
   <div class="wrap">
     <p class="eyebrow rise">Trusted by</p>
     <div class="client-names rise">
-      <span>HSBC</span><span>DBS</span><span>Scotiabank</span><span>TTB</span>
+      <span>HSBC</span><span>DBS</span><span>Scotiabank</span><span>NocNoc</span>
       <span>Amnesty International</span><span>FAO</span><span>Pandora</span>
-      <span>SCB</span><span>NocNoc</span><span>Varthana</span>
+      <span>SCB</span><span>ttb</span><span>Varthana</span>
     </div>
   </div>
 </section>
@@ -802,12 +879,108 @@ footer {
       <span class="foot-copy">© 2026 BCX Design Pte Ltd · Behavioural science, made tangible</span>
     </div>
     <div class="foot-right">
-      <a href="#">Singapore · Bangkok</a>
-      <a href="#">LinkedIn</a>
-      <a href="#">Privacy</a>
+      <span style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)">Singapore · Bangkok</span>
+      <div class="foot-socials" id="footSocials" aria-label="BCX Design on social media"></div>
+      <a href="#" id="privacyTrigger">Privacy</a>
     </div>
   </div>
 </footer>
+
+
+<!-- PRIVACY POLICY MODAL -->
+<div class="modal-overlay" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="privacyClose" aria-label="Close privacy policy">&times;</button>
+    <h2 id="privacyModalTitle">Privacy Policy</h2>
+    <span class="modal-updated">Last updated: July 13, 2026</span>
+
+    <p>This policy describes how BCX Design Pte Ltd ("BCX Design," "we," "us," or "our") collects, uses, discloses, and protects your personal data in compliance with the Singapore Personal Data Protection Act (PDPA) 2012.</p>
+
+    <h3>1. Collection of Personal Data</h3>
+    <p>We collect personal data primarily to provide our applied behavioural science consulting services, manage client relationships, and perform general business functions.</p>
+    <p><strong>Data collected:</strong></p>
+    <ul>
+      <li><strong>Identity Data:</strong> your name, job title, and company name.</li>
+      <li><strong>Contact Data:</strong> your email address, telephone number, mailing address, and professional social media links (e.g., LinkedIn).</li>
+      <li><strong>Professional Data:</strong> information related to your role, specific project details, and behavioural insights necessary for the consulting services we provide.</li>
+      <li><strong>Technical Data:</strong> IP address, browser type, device type, and usage data collected via our website's analytics tools (cookies).</li>
+      <li><strong>Communications Data:</strong> your preferences in receiving marketing and other communications from us.</li>
+    </ul>
+    <p><strong>Method of collection:</strong> direct interaction (contact forms, newsletter sign-ups, proposal requests, email or phone contact), automated technology (cookies and server logs when you browse our website — you can manage or block these via your browser settings, though disabling cookies may affect your experience), and third parties (publicly available sources or mutual professional contacts).</p>
+
+    <h3>2. Purposes for the Use of Personal Data</h3>
+    <ul>
+      <li><strong>Service Delivery</strong> — to provide and administer our consulting services, including product design, strategy, change management, and research (Contractual Obligation).</li>
+      <li><strong>Communication and Marketing</strong> — to respond to inquiries, send relevant content, and notify you of services of interest (Legitimate Interest, and consent where legally required).</li>
+      <li><strong>Business Operations</strong> — to manage our relationship, process payments, and administer our business, including troubleshooting and security (Legitimate Interest).</li>
+      <li><strong>Legal Compliance</strong> — to comply with applicable Singapore laws, regulations, and authority requests (Legal Obligation).</li>
+    </ul>
+
+    <h3>3. Disclosure and Sharing of Personal Data</h3>
+    <p>We do not sell your personal data. We may share it with service providers (cloud hosting, email delivery, payment processing, analytics), professional advisors (lawyers, auditors, insurers), affiliates and partners on joint projects you've agreed to, and regulatory authorities where legally mandated.</p>
+
+    <h3>4. Data Storage and Cross-Border Transfers</h3>
+    <p>BCX Design operates entirely within Singapore. All personal data collected is processed and stored locally on secure systems within Singapore. We do not transfer, host, or store personal data in jurisdictions outside of Singapore.</p>
+
+    <h3>5. Data Protection and Retention</h3>
+    <p>We implement appropriate administrative, physical, and technical measures to protect personal data against unauthorized access, destruction, alteration, or disclosure. We retain data only as long as necessary for the purposes collected, or as required under Singapore law (typically 5–7 years for transactional and financial records), after which it is securely destroyed or anonymised.</p>
+
+    <h3>6. Your Rights Under the PDPA</h3>
+    <p>You have the right to request access to your personal data and how it has been used or disclosed over the past year, correction of inaccurate or incomplete data, and withdrawal of consent to its collection, use, or disclosure, subject to certain legal exceptions.</p>
+
+    <h3>7. Contact Information</h3>
+    <p>Questions about this policy or how we handle your data can be directed to our Data Protection Officer: <strong>BCX Design Pte Ltd</strong>, Email: <a href="mailto:david@bcx-design.com">david@bcx-design.com</a></p>
+
+    <h3>8. Changes to this Policy</h3>
+    <p>BCX Design reserves the right to modify this Privacy Policy to reflect updates in legal requirements or operational workflows. Changes will be posted on this page with an updated revision date.</p>
+  </div>
+</div>
+
+
+<script>
+/* Social links — add a row here to add a platform site-wide on this page */
+var BCX_SOCIALS = [
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/company/bcx-design/?viewAsMember=true',
+    icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>' },
+  { name: 'YouTube', url: 'https://youtube.com/@bcxdesign8533?si=qJxKGQ9p_5d0IfCw',
+    icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.56A3.02 3.02 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.56a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>' }
+  /* Future additions — just add a row, no other markup changes needed:
+  { name: 'Instagram', url: '', icon: '<svg viewBox="0 0 24 24" fill="currentColor">...</svg>' },
+  { name: 'Facebook',  url: '', icon: '<svg viewBox="0 0 24 24" fill="currentColor">...</svg>' },
+  */
+];
+(function () {
+  var mount = document.getElementById('footSocials');
+  if (mount) {
+    BCX_SOCIALS.forEach(function (s) {
+      var a = document.createElement('a');
+      a.href = s.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', s.name);
+      a.innerHTML = s.icon;
+      mount.appendChild(a);
+    });
+  }
+
+  var modal = document.getElementById('privacyModal');
+  var trigger = document.getElementById('privacyTrigger');
+  var closeBtn = document.getElementById('privacyClose');
+  if (trigger && modal) {
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      modal.classList.add('open');
+    });
+    closeBtn.addEventListener('click', function () { modal.classList.remove('open'); });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') modal.classList.remove('open');
+    });
+  }
+}());
+</script>
 
 
 <script>
