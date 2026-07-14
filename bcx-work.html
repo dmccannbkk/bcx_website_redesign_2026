@@ -23,7 +23,7 @@
   --spark:      #FF4C29;
   --header-h:   60px;
   --maxw:       1180px;
-  --serif:      'Cormorant', Georgia, serif;
+  --serif:      'Cormorant', Georgia, serifnav-hambruger
   --sans:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -547,7 +547,7 @@ footer { padding: 44px 0; border-top: 1px solid var(--line) }
       <a href="bcx-work.html" class="active">Work</a>
       <a href="bcx-about.html">About</a>
     </nav>
-    <a href="bcx-book.html" class="nav-book">Book a Call</a
+    <a href="bcx-book.html" class="nav-book">Book a Call</a>
      <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>                                                      
@@ -1173,7 +1173,7 @@ var BCX_SOCIALS = [
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') modal.classList.remove('open'); });
   }
 }());
-</script>
+<script>
 var hamburger = document.getElementById('navHamburger');
 var dropdown  = document.getElementById('navDropdown');
 if (hamburger && dropdown) {
@@ -1190,5 +1190,6 @@ if (hamburger && dropdown) {
     });
   });
 }
+</script>
 </body>
 </html>
