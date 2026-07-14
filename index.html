@@ -1063,6 +1063,23 @@ var BCX_SOCIALS = [
   }, 600);
 }());
 </script>
-
+<script>
+var hamburger = document.getElementById('navHamburger');
+var dropdown  = document.getElementById('navDropdown');
+if (hamburger && dropdown) {
+  hamburger.addEventListener('click', function () {
+    var isOpen = dropdown.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+  });
+  dropdown.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      dropdown.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
+</script>
 </body>
 </html>
