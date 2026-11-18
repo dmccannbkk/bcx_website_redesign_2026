@@ -20,7 +20,7 @@ Two new pages, converted from the "BCX Programmes pages" design canvas:
    - Run `supabase/migrations/20261118000000_guide_leads.sql` (SQL Editor → paste → Run). It creates the `guide_leads` table (row level security on, no public access) and a private bucket called `guides`.
    - Upload the guide PDF to the `guides` bucket as `when-your-best-reps-push-back-on-ai.pdf`.
 2. **Cloudflare Turnstile** (free): Cloudflare dashboard → Turnstile → Add site → domain `bcx-design.com` (add `localhost` and the Vercel preview domain for testing). Copy the **site key** and **secret key**.
-   - Replace `TURNSTILE_SITE_KEY` in `bcx-ai-for-sales-managers.html` with the site key (it's public, so it's fine in the HTML).
+   - The site key is already in `bcx-ai-for-sales-managers.html` (it is public).
 3. **Vercel** → Project → Settings → Environment Variables:
    - `SUPABASE_URL` (Supabase → Project Settings → API)
    - `SUPABASE_SECRET_KEY` (Project Settings → API Keys → Secret keys, `sb_secret_...`; server-only, never in the HTML)
