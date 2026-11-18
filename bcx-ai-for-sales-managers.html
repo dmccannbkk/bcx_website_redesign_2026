@@ -289,14 +289,19 @@ a{color:#F2F2F2;text-decoration:none}a:hover{color:#d4ad57}
         website: form.website.value,
         token: token
       })
-    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+    }).then(function (r) {
+        return r.text().then(function (t) {
+          var j = {}; try { j = JSON.parse(t); } catch (e) { j = { error: 'unexpected response' }; }
+          return { ok: r.ok, status: r.status, body: j };
+        });
+      })
       .then(function (res) {
-        if (!res.ok || !res.body.url) throw new Error(res.body && res.body.error || 'failed');
+        if (!res.ok || !res.body.url) throw new Error((res.body && res.body.error || 'failed') + ' (' + res.status + ')');
         status.innerHTML = 'Your guide is ready. <a href="' + res.body.url + '" style="color:#d4ad57;border-bottom:1px solid #d4ad57">Download it here</a> (the link works for 10 minutes).';
         window.location.href = res.body.url;
       })
-      .catch(function () {
-        say('Sorry, something went wrong. Please try again in a moment.');
+      .catch(function (err) {
+        say('Sorry, something went wrong. Please try again in a moment. [' + (err && err.message || 'network error') + ']');
         button.disabled = false;
         if (window.turnstile) { window.turnstile.reset(); token = ''; }
       });
