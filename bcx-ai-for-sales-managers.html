@@ -92,7 +92,7 @@ a{color:#F2F2F2;text-decoration:none}a:hover{color:#d4ad57}
   </div>
 </article>
 <article id="sceptic" style="background: #000000; display: flex; flex-direction: column">
-  <video controls preload="none" playsinline poster="images/programmes/daniel-poster.jpg" aria-label="Daniel, the sceptic: 84-second film" style="display: block; width: 100%; aspect-ratio: 16 / 9; background: #0A0908; border-bottom: 1px solid rgba(140,140,140,0.18)"><source src="videos/daniel.mp4" type="video/mp4"></video>
+  <button type="button" class="yt-facade" data-yt="Jhdy6-XOu1U" aria-label="Play Daniel, the sceptic (84-second film)" style="position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0; border: 0; border-bottom: 1px solid rgba(140,140,140,0.18); background: #0A0908 url(images/programmes/daniel-poster.jpg) center / cover no-repeat; cursor: pointer"><span style="position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; border: 1px solid #d4ad57; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; display: block"><path d="M8 5 L19 12 L8 19 Z" fill="#d4ad57"></path></svg></span><span style="position: absolute; left: 16px; bottom: 12px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #F2F2F2; background: rgba(0,0,0,0.55); padding: 4px 8px">Video · 84 sec</span></button>
   <div style="padding: 28px 28px 32px 28px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
     <h3 style="font-family: Cormorant, Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.2; margin: 0">Daniel, the sceptic</h3>
     <p style="font-family: Cormorant, Georgia, serif; font-style: italic; font-size: 18px; line-height: 1.5; color: #F2F2F2; margin: 0">Knows every account by heart. Then a junior walks in knowing the client's new CFO.</p>
@@ -302,6 +302,19 @@ a{color:#F2F2F2;text-decoration:none}a:hover{color:#d4ad57}
       });
   });
 })();
+</script>
+<script>
+document.querySelectorAll('.yt-facade').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + btn.dataset.yt + '?autoplay=1&rel=0&modestbranding=1';
+    f.title = btn.getAttribute('aria-label');
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    f.style.cssText = 'display:block;width:100%;aspect-ratio:16/9;border:0';
+    btn.replaceWith(f);
+  });
+});
 </script>
 </body>
 </html>
