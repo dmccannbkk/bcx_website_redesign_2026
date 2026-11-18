@@ -23,7 +23,7 @@ Two new pages, converted from the "BCX Programmes pages" design canvas:
    - Replace `TURNSTILE_SITE_KEY` in `bcx-ai-for-sales-managers.html` with the site key (it's public, so it's fine in the HTML).
 3. **Vercel** → Project → Settings → Environment Variables:
    - `SUPABASE_URL` (Supabase → Project Settings → API)
-   - `SUPABASE_SERVICE_ROLE_KEY` (same page; server-only, never in the HTML)
+   - `SUPABASE_SECRET_KEY` (Project Settings → API Keys → Secret keys, `sb_secret_...`; server-only, never in the HTML)
    - `TURNSTILE_SECRET_KEY`
    - optional: `GUIDE_BUCKET` (default `guides`), `GUIDE_PATH` (default `when-your-best-reps-push-back-on-ai.pdf`)
    - Redeploy after adding them.

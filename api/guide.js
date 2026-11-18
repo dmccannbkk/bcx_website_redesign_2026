@@ -5,7 +5,7 @@
 //
 // Environment variables (set in Vercel → Project → Settings → Environment Variables):
 //   SUPABASE_URL               e.g. https://abcd1234.supabase.co
-//   SUPABASE_SERVICE_ROLE_KEY  server-only key; never put this in the HTML
+//   SUPABASE_SECRET_KEY        server-only secret key (sb_secret_...); never put this in the HTML
 //   TURNSTILE_SECRET_KEY       from Cloudflare Turnstile
 //   GUIDE_BUCKET               optional, default "guides"
 //   GUIDE_PATH                 optional, default "when-your-best-reps-push-back-on-ai.pdf"
@@ -21,12 +21,12 @@ module.exports = async function handler(req, res) {
 
   const {
     SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_SECRET_KEY,
     TURNSTILE_SECRET_KEY,
     GUIDE_BUCKET = 'guides',
     GUIDE_PATH = 'when-your-best-reps-push-back-on-ai.pdf',
   } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !TURNSTILE_SECRET_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY || !TURNSTILE_SECRET_KEY) {
     console.error('guide: missing environment variables');
     return res.status(500).json({ error: 'Not configured' });
   }
@@ -54,9 +54,9 @@ module.exports = async function handler(req, res) {
   }).then((r) => r.json()).catch(() => ({ success: false }));
   if (!verify.success) return res.status(400).json({ error: 'Human check failed' });
 
+  // New-style Supabase secret keys go in the apikey header only (they are not JWTs).
   const headers = {
-    apikey: SUPABASE_SERVICE_ROLE_KEY,
-    Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+    apikey: SUPABASE_SECRET_KEY,
     'Content-Type': 'application/json',
   };
 
