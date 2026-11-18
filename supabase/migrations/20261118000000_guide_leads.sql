@@ -18,3 +18,8 @@ alter table public.guide_leads enable row level security;
 insert into storage.buckets (id, name, public)
 values ('guides', 'guides', false)
 on conflict (id) do nothing;
+
+-- Newer Supabase projects don't grant API roles access to new tables automatically.
+grant usage on schema public to service_role;
+grant select, insert, update on table public.guide_leads to service_role;
+grant usage, select on all sequences in schema public to service_role;
