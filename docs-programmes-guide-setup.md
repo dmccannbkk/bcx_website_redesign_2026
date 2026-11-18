@@ -37,4 +37,4 @@ DailyPlay game leads can go in the same table: download them from DailyPlay (Rep
 
 ## Still placeholders on the workshop page
 
-- Three of the four film cards (the manager, the pioneer, the middle). Daniel's film plays from YouTube (https://youtu.be/Jhdy6-XOu1U). To add another film, copy Daniel's `yt-facade` button and change `data-yt` to the new video's ID; the YouTube player only loads (and sets cookies) when someone presses play.
+- Three of the four film cards (the manager, the pioneer, the middle). Daniel's film plays from YouTube (https://youtu.be/0Ag28kzCLu8). To add another film, copy Daniel's `yt-facade` button and change `data-yt` to the new video's ID; the YouTube player only loads (and sets cookies) when someone presses play.
