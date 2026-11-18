@@ -691,6 +691,7 @@ footer {
       <a href="bcx-studio.html">Studio</a>
       <a href="bcx-work.html">Work</a>
       <a href="bcx-about.html">About</a>
+      <a href="bcx-programmes.html">Programmes</a>
     </nav>
     <a href="bcx-book.html" class="nav-book">Book a Call</a>
 <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
@@ -704,6 +705,7 @@ footer {
   <a href="bcx-studio.html">Studio</a>
   <a href="bcx-work.html">Work</a>
   <a href="bcx-about.html">About</a>
+  <a href="bcx-programmes.html">Programmes</a>
   <a href="bcx-book.html">Book a Call</a>
 </nav>
 
@@ -1024,6 +1026,7 @@ var BCX_SOCIALS = [
       e.preventDefault();
       modal.classList.add('open');
     });
+    if (window.location.hash === '#privacy') modal.classList.add('open');
     closeBtn.addEventListener('click', function () { modal.classList.remove('open'); });
     modal.addEventListener('click', function (e) {
       if (e.target === modal) modal.classList.remove('open');

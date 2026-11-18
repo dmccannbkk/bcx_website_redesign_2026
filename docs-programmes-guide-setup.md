@@ -37,6 +37,5 @@ DailyPlay game leads can go in the same table: download them from DailyPlay (Rep
 
 ## Still placeholders on the workshop page
 
-- The four film cards (no YouTube links yet) and the "two-minute team quiz" link.
-- The founding price, and "Up to 20 managers" (check against the planned cohort size).
-- The "Apply for a seat" buttons point to the details section; swap in the Maven link when ready.
+- Three of the four film cards (the manager, the pioneer, the middle). Daniel's film is in `videos/daniel.mp4`.
+- The "Apply for a seat" buttons point to the details section on the page; swap in the workshop's Maven link when ready.
