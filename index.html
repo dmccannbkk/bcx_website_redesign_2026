@@ -1029,7 +1029,11 @@ var BCX_SOCIALS = [
       e.preventDefault();
       modal.classList.add('open');
     });
-    if (window.location.hash === '#privacy') modal.classList.add('open');
+    if (window.location.hash === '#privacy') {
+      modal.classList.add('open');
+      // clear #privacy from the address so a refresh doesn't reopen it
+      if (window.history && history.replaceState) history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
     closeBtn.addEventListener('click', function () { modal.classList.remove('open'); });
     modal.addEventListener('click', function (e) {
       if (e.target === modal) modal.classList.remove('open');
