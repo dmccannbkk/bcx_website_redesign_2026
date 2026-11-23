@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/bcx-programmes.html", "destination": "/bcx-workshops.html", "permanent": true },
+    { "source": "/bcx-programmes", "destination": "/bcx-workshops.html", "permanent": true }
+  ]
+}
